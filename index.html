@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Steve</title>
+<meta name="description" content="TET, Unfog and Kpee. What I'm building, written down as I go.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%235a7fb0'/%3E%3Crect x='3' y='4' width='10' height='2' fill='%23fff'/%3E%3Crect x='3' y='7' width='10' height='2' fill='%23fff'/%3E%3Crect x='3' y='10' width='6' height='2' fill='%23fff'/%3E%3C/svg%3E">
+<style>
+body{margin:0;background:#e9ebee;color:#000;font:13px/1.5 Verdana,Arial,Helvetica,sans-serif}
+a{color:#3c5a8a;text-decoration:none}
+a:hover{text-decoration:underline}
+#wrap{max-width:980px;margin:12px auto;padding:0 10px}
+#top{background:#fff;border:1px solid #adadad;border-bottom:0}
+#top .bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;background:linear-gradient(#f7f8fa,#e4e8ee);border-bottom:1px solid #adadad}
+#top h1{margin:0;font-size:20px}
+#top h1 a{color:#000}
+#top .sub{color:#555;font-size:11px}
+#nav{padding:6px 12px;background:#fff;font-size:12px}
+#nav a{margin-right:14px;white-space:nowrap}
+#nav a.on{font-weight:bold;color:#000}
+#nav .badge{background:#c0392b;color:#fff;border-radius:7px;padding:0 5px;font-size:10px;margin-left:3px}
+#crumbs{padding:6px 12px;background:#e4e8ee;border:1px solid #adadad;border-top:0;font-size:12px}
+#main{background:#fff;border:1px solid #adadad;border-top:0;padding:12px}
+table{border-collapse:collapse;width:100%}
+.catbg{background:linear-gradient(#a9bcd6,#8ea6c7);color:#fff;font-weight:bold;padding:6px 8px;text-align:left;font-size:12px}
+.titlebg{background:#dfe6ef;padding:6px 8px;font-weight:bold;font-size:12px;border:1px solid #c5d0de}
+.windowbg td{padding:8px;vertical-align:top;border-bottom:1px solid #d6d9de}
+.windowbg:nth-child(odd) td{background:#f2f4f7}
+.num{text-align:center;white-space:nowrap;color:#444;width:60px}
+.last{width:210px;font-size:11px;color:#444}
+.board b{font-size:14px}
+.board .desc{color:#333;margin-top:2px}
+.status{display:inline-block;font-size:10px;border:1px solid #9aa9bd;background:#eef2f7;color:#334;padding:0 5px;margin-left:6px;vertical-align:2px}
+/* tabs, SMF button strip */
+.tabs{display:flex;flex-wrap:wrap;gap:2px;margin:10px 0 0;border-bottom:1px solid #8ea6c7}
+.tabs a{padding:5px 12px;background:#e4e8ee;border:1px solid #adb9ca;border-bottom:0;color:#223;font-size:12px}
+.tabs a.on{background:#8ea6c7;color:#fff;font-weight:bold}
+.pane{padding:12px 4px 4px}
+.links{margin:8px 0 0;font-size:12px}
+.links a{margin-right:14px}
+/* posts */
+.post{display:grid;grid-template-columns:150px 1fr;border:1px solid #d6d9de;margin-bottom:8px}
+.post .who{background:#f2f4f7;padding:10px;font-size:11px;color:#444;border-right:1px solid #d6d9de}
+.post .who b{display:block;font-size:13px;color:#000;margin-bottom:2px}
+.post .who i{font-style:normal;color:#3c5a8a;display:block;margin-bottom:6px}
+.post .msg{padding:8px 12px 12px;min-width:0}
+.post .head{display:flex;justify-content:space-between;gap:12px;align-items:baseline;border-bottom:1px solid #eceef2;padding-bottom:6px;margin-bottom:8px}
+.post .head b{font-size:14px}
+.post .head span{color:#666;font-size:11px;white-space:nowrap}
+.post.them .who{background:#f7f3ea}
+.text p{margin:0 0 .9em}
+.text h2{font-size:15px;margin:1.3em 0 .5em;padding-bottom:3px;border-bottom:1px solid #d6d9de}
+.text h3{font-size:13px;margin:1.1em 0 .4em}
+.text h2:first-child,.text h3:first-child{margin-top:0}
+.text ul,.text ol{margin:0 0 .9em;padding-left:1.6em}
+.text li{margin:.2em 0}
+.text code{font-family:Consolas,"Courier New",monospace;font-size:12px;background:#f2f4f7;padding:0 3px}
+.codebox{margin:0 0 1em}
+.codebox .lbl{font-size:11px;color:#444;margin-bottom:2px}
+.codebox pre{margin:0;padding:8px 10px;background:#f7f7f7;border:1px solid #c9c9c9;font:12px/1.45 Consolas,"Courier New",monospace;overflow-x:auto;white-space:pre}
+.text figure{margin:0 0 1em}
+.text figure img{max-width:100%;height:auto;border:1px solid #c9c9c9;display:block}
+.text figcaption{font-size:11px;color:#555;margin-top:3px}
+.text blockquote{margin:0 0 1em;padding:6px 10px;background:#f7f7f7;border:1px solid #d6d9de;border-left:3px solid #8ea6c7}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.gallery figure{margin:0;border:1px solid #d6d9de;padding:4px;background:#f7f8fa}
+.gallery img{width:100%;height:150px;object-fit:cover;display:block;cursor:zoom-in}
+.gallery figcaption{font-size:11px;color:#444;padding:4px 2px 0}
+#zoom{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:9;cursor:zoom-out}
+#zoom img{max-width:94vw;max-height:92vh;border:4px solid #fff}
+.files td{padding:8px;border-bottom:1px solid #d6d9de;vertical-align:top}
+.muted{color:#666}
+/* forms */
+.form{max-width:620px}
+.form label{display:block;font-weight:bold;font-size:12px;margin:10px 0 3px}
+.form input,.form textarea,.form select{width:100%;box-sizing:border-box;font:13px Verdana,Arial,sans-serif;padding:5px;border:1px solid #9aa9bd;background:#fff}
+.form textarea{min-height:150px;resize:vertical}
+.form .hp{position:absolute;left:-9999px}
+.btn{font:bold 12px Verdana,Arial,sans-serif;padding:5px 14px;border:1px solid #6d86a8;background:linear-gradient(#f7f8fa,#dfe6ef);cursor:pointer;color:#223}
+.btn:hover{background:linear-gradient(#fff,#e7edf5)}
+.btn[disabled]{opacity:.6;cursor:default}
+.btn.small{font-weight:normal;padding:3px 9px}
+.note{padding:8px 10px;border:1px solid #c5d0de;background:#f2f6fb;margin:10px 0}
+.err{padding:8px 10px;border:1px solid #d9a3a3;background:#fbefef;margin:10px 0;color:#7a1f1f}
+.inbox td{padding:7px 8px;border-bottom:1px solid #d6d9de;vertical-align:top;cursor:pointer}
+.inbox tr:hover td{background:#f7f9fc}
+.inbox tr.unread td{font-weight:bold}
+.inbox .prev{font-weight:normal;color:#555;font-size:12px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+#foot{margin:12px 0 30px;color:#666;font-size:11px;text-align:center}
+@media (max-width:640px){
+  .post{grid-template-columns:1fr}
+  .post .who{border-right:0;border-bottom:1px solid #d6d9de;padding:6px 10px}
+  .post .who b,.post .who i{display:inline;margin-right:8px}
+  .last,.num{display:none}
+}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="top">
+    <div class="bar"><h1><a href="#/" id="siteTitle"></a></h1><span class="sub" id="siteTag"></span></div>
+    <div id="nav"></div>
+  </div>
+  <div id="crumbs"></div>
+  <div id="main"></div>
+  <div id="foot"></div>
+</div>
+<script src="content.js"></script>
+<script src="config.js"></script>
+<script>
+(function () {
+'use strict';
+var S = window.SITE, P = window.PROJECTS, POSTS = window.POSTS || [], ABOUT = window.ABOUT || '';
+var MAIL = window.MAIL || {}, MAIL_ON = !!(MAIL.url && MAIL.anonKey);
+var ORDER = Object.keys(P);
+var $ = function (s) { return document.querySelector(s); };
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+function fmtDate(d) { var m = /^(\d{4})-(\d{2})(?:-(\d{2}))?/.exec(d || ''); if (!m) return esc(d); return (m[3] ? MONTHS[+m[2]-1] + ' ' + (+m[3]) + ', ' : MONTHS[+m[2]-1] + ' ') + m[1]; }
+function fmtTime(iso) { var d = new Date(iso); if (isNaN(d)) return ''; return MONTHS[d.getMonth()].slice(0,3) + ' ' + d.getDate() + ', ' + d.getFullYear() + ' ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0'); }
+var store = { get: function (k, d) { try { var v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+              set: function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
+
+/* ---------- text: a small markdown ---------- */
+function inline(s) {
+  var h = esc(s);
+  h = h.replace(/`([^`]+)`/g, '<code>$1</code>');
+  h = h.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+  h = h.replace(/\[([^\]]+)\]\(((?:https?:\/\/|mailto:|#|files\/|images\/)[^\s)]*)\)/g, function (m, t, u) { var ext = /^https?:/.test(u); return '<a href="' + u + '"' + (ext ? ' rel="noopener"' : '') + (/^files\//.test(u) && /download/i.test(t) ? ' download' : '') + '>' + t + '</a>'; });
+  return h;
+}
+function img(src, cap) {
+  return '<figure><img src="' + esc(src) + '" alt="' + esc(cap) + '" loading="lazy" onerror="this.parentNode.remove()">' + (cap ? '<figcaption>' + esc(cap) + '</figcaption>' : '') + '</figure>';
+}
+function md(src) {
+  var lines = String(src || '').replace(/\r/g, '').split('\n'), out = '', i = 0, para = [];
+  function flush() { if (para.length) { out += '<p>' + para.map(inline).join('<br>') + '</p>'; para = []; } }
+  while (i < lines.length) {
+    var l = lines[i], t = l.trim(), m;
+    if (/^```/.test(t)) {
+      flush(); var buf = []; i++;
+      while (i < lines.length && !/^```/.test(lines[i].trim())) buf.push(lines[i++]);
+      i++; out += '<div class="codebox"><div class="lbl">Code:</div><pre>' + esc(buf.join('\n')) + '</pre></div>'; continue;
+    }
+    if (!t) { flush(); i++; continue; }
+    if ((m = /^(#{2,3})\s+(.+)$/.exec(t))) { flush(); out += '<h' + m[1].length + '>' + inline(m[2]) + '</h' + m[1].length + '>'; i++; continue; }
+    if ((m = /^!\[([^\]]*)\]\(([^)\s]+)\)$/.exec(t))) { flush(); out += img(m[2], m[1]); i++; continue; }
+    if (/^[-*]\s+/.test(t) || /^\d+\.\s+/.test(t)) {
+      flush(); var ol = /^\d+\./.test(t), items = [];
+      while (i < lines.length && (ol ? /^\d+\.\s+/ : /^[-*]\s+/).test(lines[i].trim())) items.push(lines[i++].trim().replace(/^([-*]|\d+\.)\s+/, ''));
+      out += '<' + (ol ? 'ol' : 'ul') + '>' + items.map(function (x) { return '<li>' + inline(x) + '</li>'; }).join('') + '</' + (ol ? 'ol' : 'ul') + '>'; continue;
+    }
+    if (/^>\s?/.test(t)) { flush(); var q = []; while (i < lines.length && /^>\s?/.test(lines[i].trim())) q.push(lines[i++].trim().replace(/^>\s?/, '')); out += '<blockquote>' + q.map(inline).join('<br>') + '</blockquote>'; continue; }
+    para.push(t); i++;
+  }
+  flush();
+  return '<div class="text">' + out + '</div>';
+}
+
+/* ---------- pieces ---------- */
+function postBox(opts) {
+  return '<div class="post' + (opts.them ? ' them' : '') + '"><div class="who"><b>' + esc(opts.name) + '</b><i>' + esc(opts.role || '') + '</i>' + (opts.side || '') + '</div>'
+    + '<div class="msg"><div class="head"><b>' + esc(opts.title || '') + '</b><span>' + (opts.when || '') + '</span></div>' + opts.html + '</div></div>';
+}
+function me(side) { return { name: S.author.name, role: S.author.role, side: (side ? side + '<br>' : '') + esc(S.author.location) }; }
+var byProject = function (id) { return POSTS.filter(function (p) { return p.project === id; }); };
+
+/* ---------- pages ---------- */
+function pageHome() {
+  var rows = ORDER.map(function (id) {
+    var pr = P[id], list = byProject(id), last = list[list.length - 1];
+    return '<tr class="windowbg"><td class="board"><b><a href="#/p/' + id + '">' + esc(pr.name) + '</a></b><span class="status">' + esc(pr.status) + '</span><div class="desc">' + esc(pr.line) + '</div></td>'
+      + '<td class="num">' + list.length + '</td><td class="last">' + (last ? '<a href="#/p/' + id + '/log">' + esc(last.title) + '</a><br>' + fmtDate(last.date) : '') + '</td></tr>';
+  }).join('');
+  var recent = POSTS.slice().reverse().slice(0, 10).map(function (p) {
+    return '<tr class="windowbg"><td style="width:70px"><a href="#/p/' + p.project + '">' + esc(P[p.project].name) + '</a></td><td><a href="#/p/' + p.project + '/log">' + esc(p.title) + '</a></td><td class="last">' + fmtDate(p.date) + '</td></tr>';
+  }).join('');
+  var intro = ABOUT.split(/\n\s*\n/).map(function (s) { return s.trim(); }).filter(Boolean)[0] || '';
+  return '<div class="note">' + inline(intro) + ' <a href="#/about">More about me</a></div>'
+    + '<table><tr><th class="catbg">Projects</th><th class="catbg num">Posts</th><th class="catbg last">Last post</th></tr>' + rows + '</table>'
+    + '<table style="margin-top:14px"><tr><th class="catbg" colspan="3">Latest</th></tr>' + recent + '</table>';
+}
+function pageAbout() {
+  return postBox(Object.assign(me(''), { title: 'About me', when: '', html: md(ABOUT) }));
+}
+var TABS = [['', 'Overview'], ['use', 'How to use'], ['how', 'How it works'], ['log', 'Log'], ['files', 'Files & pictures']];
+function pageProject(id, tab) {
+  var pr = P[id], list = byProject(id);
+  var links = (pr.links || []).map(function (l) { return '<a href="' + esc(l[1]) + '"' + (/^https?:/.test(l[1]) ? ' rel="noopener"' : '') + (/download/i.test(l[0]) ? ' download' : '') + '>' + esc(l[0]) + '</a>'; }).join('');
+  var head = '<div class="titlebg">' + esc(pr.name) + '<span class="status">' + esc(pr.status) + '</span> &nbsp;<span style="font-weight:normal">' + esc(pr.line) + '</span></div>'
+    + (links ? '<div class="links">' + links + '</div>' : '');
+  var tabs = '<div class="tabs">' + TABS.filter(function (t) { return t[0] !== 'use' || pr.use; }).map(function (t) {
+    return '<a href="#/p/' + id + (t[0] ? '/' + t[0] : '') + '" class="' + (t[0] === tab ? 'on' : '') + '">' + t[1] + (t[0] === 'log' ? ' (' + list.length + ')' : '') + '</a>';
+  }).join('') + '</div>';
+  var body;
+  if (tab === 'log') {
+    body = '<p class="muted" style="margin:0 0 8px">' + list.length + ' posts, oldest first. Started ' + fmtDate(pr.started) + '.</p>'
+      + list.map(function (p, i) { return postBox(Object.assign(me('Post ' + (i + 1)), { title: p.title, when: '&laquo; on: ' + fmtDate(p.date) + ' &raquo;', html: md(p.body) })); }).join('');
+  } else if (tab === 'files') {
+    var files = (pr.files || []).map(function (f) {
+      return '<tr><td style="width:180px"><b>' + (f[1] ? '<a href="' + esc(f[1]) + '" download>' + esc(f[0]) + '</a>' : esc(f[0])) + '</b></td><td>' + esc(f[2] || '') + '</td></tr>';
+    }).join('');
+    var pics = (pr.pictures || []).map(function (p) { return '<figure><img src="' + esc(p[0]) + '" alt="' + esc(p[1]) + '" loading="lazy" onerror="this.parentNode.remove()"><figcaption>' + esc(p[1]) + '</figcaption></figure>'; }).join('');
+    body = (files ? '<table class="files"><tr><th class="catbg" colspan="2">Files</th></tr>' + files + '</table><br>' : '')
+      + '<table><tr><th class="catbg">Pictures</th></tr></table><div class="gallery" style="margin-top:8px">' + pics + '</div><p class="muted gone" hidden>No pictures yet.</p>';
+  } else {
+    var text = tab === 'use' ? pr.use : tab === 'how' ? pr.how : pr.overview;
+    body = postBox(Object.assign(me(''), { title: tab === 'use' ? 'How to use ' + pr.name : tab === 'how' ? 'How ' + pr.name + ' works' : pr.name, when: tab ? '' : 'started ' + fmtDate(pr.started), html: md(text) }));
+  }
+  return head + tabs + '<div class="pane">' + body + '</div>';
+}
+
+/* ---------- mail: visitor ---------- */
+function rpc(fn, args, token) {
+  return fetch(MAIL.url.replace(/\/$/, '') + '/rest/v1/rpc/' + fn, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', apikey: MAIL.anonKey, Authorization: 'Bearer ' + (token || MAIL.anonKey) },
+    body: JSON.stringify(args || {})
+  }).then(function (r) {
+    return r.text().then(function (t) {
+      var j = null; try { j = t ? JSON.parse(t) : null; } catch (e) {}
+      if (!r.ok) { var e2 = new Error((j && (j.message || j.msg)) || ('Error ' + r.status)); e2.status = r.status; throw e2; }
+      return j;
+    });
+  });
+}
+function myThreads() { return store.get('site:threads', []); }
+function pageContact() {
+  var list = S.contact.map(function (c) { return '<tr class="windowbg"><td style="width:150px"><b>' + esc(c[0]) + '</b></td><td><a href="' + esc(c[1]) + '"' + (/^https?:/.test(c[1]) ? ' rel="noopener"' : '') + '>' + esc(c[2]) + '</a></td></tr>'; }).join('');
+  var mine = myThreads();
+  var mineHtml = mine.length ? '<table style="margin-top:14px"><tr><th class="catbg">Your conversations</th></tr>' + mine.map(function (t) { return '<tr class="windowbg"><td><a href="#/t/' + esc(t.token) + '">' + esc(t.subject) + '</a> <span class="muted">' + fmtTime(t.at) + '</span></td></tr>'; }).join('') + '</table>' : '';
+  if (!MAIL_ON) return '<table><tr><th class="catbg" colspan="2">Contact</th></tr>' + list + '</table>';
+  var opts = '<option value="">Something else</option>' + ORDER.map(function (id) { return '<option value="' + id + '">' + esc(P[id].name) + '</option>'; }).join('');
+  return '<table><tr><th class="catbg">Write to me</th></tr></table>'
+    + '<form class="form" id="mailForm" autocomplete="on">'
+    + '<label for="mName">Your name</label><input id="mName" maxlength="80" required>'
+    + '<label for="mEmail">Your email <span class="muted" style="font-weight:normal">(optional, only I see it)</span></label><input id="mEmail" type="email" maxlength="200">'
+    + '<label for="mProject">About</label><select id="mProject">' + opts + '</select>'
+    + '<label for="mSubject">Subject</label><input id="mSubject" maxlength="140" required>'
+    + '<label for="mBody">Message</label><textarea id="mBody" maxlength="5000" required></textarea>'
+    + '<input class="hp" id="mSite" tabindex="-1" autocomplete="off" aria-hidden="true">'
+    + '<p style="margin-top:12px"><button class="btn" id="mSend" type="submit">Send</button></p>'
+    + '<div id="mMsg"></div></form>'
+    + mineHtml
+    + '<table style="margin-top:14px"><tr><th class="catbg" colspan="2">Elsewhere</th></tr>' + list + '</table>';
+}
+function wireContact() {
+  var f = $('#mailForm'); if (!f) return;
+  f.onsubmit = function (e) {
+    e.preventDefault();
+    if ($('#mSite').value) return;                                   // bots fill the hidden field
+    var btn = $('#mSend'); btn.disabled = true; $('#mMsg').innerHTML = '';
+    var subject = $('#mSubject').value.trim();
+    rpc('send_message', { p_name: $('#mName').value, p_email: $('#mEmail').value, p_subject: subject, p_body: $('#mBody').value, p_project: $('#mProject').value })
+      .then(function (token) {
+        var list = myThreads(); list.unshift({ token: token, subject: subject, at: new Date().toISOString() }); store.set('site:threads', list.slice(0, 20));
+        location.hash = '#/t/' + token + '/new';
+      })
+      .catch(function (err) { btn.disabled = false; $('#mMsg').innerHTML = '<div class="err">' + esc(err.message) + '</div>'; });
+  };
+}
+function threadHtml(t, asAdmin) {
+  return t.messages.map(function (m, i) {
+    var who = m.from_admin ? me('') : { name: t.name, role: asAdmin && t.email ? t.email : 'Visitor', side: '', them: true };
+    return postBox(Object.assign(who, { title: i === 0 ? t.subject : 'Re: ' + t.subject, when: fmtTime(m.created_at), html: md(m.body) }));
+  }).join('');
+}
+function pageThread(token, fresh) {
+  if (!MAIL_ON) return '<div class="err">Messages are not switched on here.</div>';
+  setTimeout(function () {
+    rpc('get_thread', { p_token: token }).then(function (t) {
+      var link = location.href.replace(/\/new$/, '');
+      var html = (fresh ? '<div class="note"><b>Sent.</b> Keep this page\'s link to read my reply: <a href="' + esc(link) + '">' + esc(link) + '</a><br>It\'s also saved under Contact on this browser.</div>' : '')
+        + threadHtml(t, false)
+        + (t.status === 'open'
+          ? '<form class="form" id="replyForm"><label for="rBody">Reply</label><textarea id="rBody" maxlength="5000" required></textarea><p style="margin-top:10px"><button class="btn" type="submit">Send reply</button></p><div id="rMsg"></div></form>'
+          : '<p class="muted">This conversation is closed.</p>');
+      $('#main').innerHTML = html;
+      var rf = $('#replyForm');
+      if (rf) rf.onsubmit = function (e) {
+        e.preventDefault(); var b = rf.querySelector('button'); b.disabled = true;
+        rpc('visitor_reply', { p_token: token, p_body: $('#rBody').value }).then(function () { render(); })
+          .catch(function (err) { b.disabled = false; $('#rMsg').innerHTML = '<div class="err">' + esc(err.message) + '</div>'; });
+      };
+    }).catch(function (err) { $('#main').innerHTML = '<div class="err">' + esc(err.message === 'thread not found' ? 'This conversation doesn\'t exist. Check the link.' : err.message) + '</div>'; });
+  }, 0);
+  return '<p class="muted">Loading…</p>';
+}
+
+/* ---------- mail: Steve's inbox ---------- */
+function session() { try { return JSON.parse(sessionStorage.getItem('site:session') || 'null'); } catch (e) { return null; } }
+function setSession(s) { try { s ? sessionStorage.setItem('site:session', JSON.stringify(s)) : sessionStorage.removeItem('site:session'); } catch (e) {} }
+function auth(body, grant) {
+  return fetch(MAIL.url.replace(/\/$/, '') + '/auth/v1/token?grant_type=' + grant, { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: MAIL.anonKey }, body: JSON.stringify(body) })
+    .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j.error_description || j.msg || j.message || 'Sign-in failed'); setSession({ access: j.access_token, refresh: j.refresh_token, exp: Date.now() + (j.expires_in || 3600) * 1000 }); return j; }); });
+}
+function adminRpc(fn, args) {
+  var s = session(); if (!s) return Promise.reject(new Error('signed out'));
+  var ready = s.exp - Date.now() < 60000 ? auth({ refresh_token: s.refresh }, 'refresh_token') : Promise.resolve();
+  return ready.then(function () { return rpc(fn, args, session().access); })
+    .catch(function (err) { if (err.status === 401 || /JWT/.test(err.message)) { setSession(null); render(); } throw err; });
+}
+var inboxTimer = null, unreadCount = 0;
+function pageInbox(openId) {
+  if (!MAIL_ON) return '<div class="err">Set the Supabase URL and key in config.js first.</div>';
+  if (!session()) {
+    return '<table><tr><th class="catbg">Inbox</th></tr></table><form class="form" id="loginForm"><label for="lEmail">Email</label><input id="lEmail" type="email" autocomplete="username" required><label for="lPass">Password</label><input id="lPass" type="password" autocomplete="current-password" required><p style="margin-top:12px"><button class="btn" type="submit">Sign in</button></p><div id="lMsg"></div></form>';
+  }
+  setTimeout(function () { openId ? loadThread(openId) : loadList(); }, 0);
+  return '<p class="muted">Loading…</p>';
+}
+function loadList() {
+  adminRpc('admin_threads').then(function (list) {
+    unreadCount = list.filter(function (t) { return t.unread; }).length; drawNav();
+    var rows = list.map(function (t) {
+      return '<tr class="' + (t.unread ? 'unread' : '') + '" data-id="' + t.id + '"><td style="width:170px">' + esc(t.name) + (t.project && P[t.project] ? '<br><span class="prev">' + esc(P[t.project].name) + '</span>' : '') + '</td><td>' + esc(t.subject) + (t.status === 'closed' ? ' <span class="status">closed</span>' : '') + '<br><span class="prev">' + esc(t.last_body || '') + '</span></td><td class="last">' + fmtTime(t.updated_at) + '<br><span class="prev">' + t.n + ' messages</span></td></tr>';
+    }).join('');
+    $('#main').innerHTML = '<div class="row" style="justify-content:space-between;margin-bottom:6px"><b>Inbox</b><span><button class="btn small" id="iRefresh">Refresh</button> <button class="btn small" id="iOut">Sign out</button></span></div>'
+      + '<table class="inbox"><tr><th class="catbg">From</th><th class="catbg">Subject</th><th class="catbg last">Updated</th></tr>' + (rows || '<tr><td colspan="3" class="muted">No messages yet.</td></tr>') + '</table>';
+    $('#main').querySelectorAll('tr[data-id]').forEach(function (tr) { tr.onclick = function () { location.hash = '#/inbox/' + tr.dataset.id; }; });
+    $('#iRefresh').onclick = loadList; $('#iOut').onclick = function () { setSession(null); unreadCount = 0; render(); };
+  }).catch(function (err) { $('#main').innerHTML = '<div class="err">' + esc(err.message === 'not allowed' ? 'This account is not on the admin list. See mail.sql step 3.' : err.message) + '</div>'; });
+}
+function loadThread(id) {
+  adminRpc('admin_thread', { p_id: id }).then(function (t) {
+    adminRpc('admin_threads').then(function (l) { unreadCount = l.filter(function (x) { return x.unread; }).length; drawNav(); }).catch(function () {});
+    if (!t) { $('#main').innerHTML = '<div class="err">Not found.</div>'; return; }
+    $('#main').innerHTML = '<div class="row" style="justify-content:space-between;margin-bottom:8px"><a href="#/inbox">&laquo; Inbox</a><span>'
+      + (t.email ? '<a class="btn small" href="mailto:' + esc(t.email) + '?subject=' + encodeURIComponent('Re: ' + t.subject) + '">Email ' + esc(t.email) + '</a> ' : '')
+      + '<button class="btn small" id="tStatus">' + (t.status === 'open' ? 'Close' : 'Reopen') + '</button> <button class="btn small" id="tDel">Delete</button></span></div>'
+      + threadHtml(t, true)
+      + '<form class="form" id="aForm"><label for="aBody">Reply as ' + esc(S.author.name) + '</label><textarea id="aBody" maxlength="5000" required></textarea><p style="margin-top:10px"><button class="btn" type="submit">Send reply</button></p><div id="aMsg"></div></form>';
+    $('#aForm').onsubmit = function (e) { e.preventDefault(); var b = this.querySelector('button'); b.disabled = true; adminRpc('admin_reply', { p_id: id, p_body: $('#aBody').value }).then(function () { loadThread(id); }).catch(function (err) { b.disabled = false; $('#aMsg').innerHTML = '<div class="err">' + esc(err.message) + '</div>'; }); };
+    $('#tStatus').onclick = function () { adminRpc('admin_set_status', { p_id: id, p_status: t.status === 'open' ? 'closed' : 'open' }).then(function () { loadThread(id); }); };
+    $('#tDel').onclick = function () { if (confirm('Delete this conversation for good?')) adminRpc('admin_delete_thread', { p_id: id }).then(function () { location.hash = '#/inbox'; }); };
+  }).catch(function (err) { $('#main').innerHTML = '<div class="err">' + esc(err.message) + '</div>'; });
+}
+function wireLogin() {
+  var f = $('#loginForm'); if (!f) return;
+  f.onsubmit = function (e) { e.preventDefault(); var b = f.querySelector('button'); b.disabled = true;
+    auth({ email: $('#lEmail').value, password: $('#lPass').value }, 'password').then(function () { render(); })
+      .catch(function (err) { b.disabled = false; $('#lMsg').innerHTML = '<div class="err">' + esc(err.message) + '</div>'; }); };
+}
+
+/* ---------- shell ---------- */
+function route() {
+  var parts = (location.hash || '#/').replace(/^#\/?/, '').split('/').filter(Boolean);
+  if (parts[0] === 'p' && P[parts[1]]) return { view: 'project', id: parts[1], tab: parts[2] || '' };
+  if (parts[0] === 'about') return { view: 'about' };
+  if (parts[0] === 'contact') return { view: 'contact' };
+  if (parts[0] === 't' && parts[1]) return { view: 'thread', token: parts[1], fresh: parts[2] === 'new' };
+  if (parts[0] === 'inbox') return { view: 'inbox', id: parts[1] };
+  if (P[parts[0]]) return { view: 'project', id: parts[0], tab: '' };           // old #tet style links
+  return { view: 'home' };
+}
+function drawNav() {
+  var r = route(), cur = r.view === 'project' ? r.id : r.view;
+  var items = [['home', '#/', 'Home'], ['about', '#/about', 'About me']].concat(ORDER.map(function (id) { return [id, '#/p/' + id, P[id].name]; })).concat([['contact', '#/contact', 'Contact']]);
+  if (session()) items.push(['inbox', '#/inbox', 'Inbox' + (unreadCount ? '<span class="badge">' + unreadCount + '</span>' : '')]);
+  $('#nav').innerHTML = items.map(function (it) { return '<a href="' + it[1] + '" class="' + (it[0] === cur ? 'on' : '') + '">' + (it[0] === 'inbox' ? it[2] : esc(it[2])) + '</a>'; }).join('');
+}
+function render() {
+  var r = route();
+  $('#siteTitle').textContent = S.title; $('#siteTag').textContent = S.tagline;
+  drawNav();
+  var crumbs = '<a href="#/">' + esc(S.title) + '</a>', html = '', title = S.title;
+  if (r.view === 'project') { var pr = P[r.id]; crumbs += ' &raquo; <a href="#/p/' + r.id + '">' + esc(pr.name) + '</a>' + (r.tab ? ' &raquo; ' + esc((TABS.filter(function (t) { return t[0] === r.tab; })[0] || ['', ''])[1]) : ''); html = pageProject(r.id, r.tab); title = pr.name + ' \u2014 ' + S.title; }
+  else if (r.view === 'about') { crumbs += ' &raquo; About me'; html = pageAbout(); title = 'About \u2014 ' + S.title; }
+  else if (r.view === 'contact') { crumbs += ' &raquo; Contact'; html = pageContact(); title = 'Contact \u2014 ' + S.title; }
+  else if (r.view === 'thread') { crumbs += ' &raquo; <a href="#/contact">Contact</a> &raquo; Conversation'; html = pageThread(r.token, r.fresh); title = 'Conversation \u2014 ' + S.title; }
+  else if (r.view === 'inbox') { crumbs += ' &raquo; <a href="#/inbox">Inbox</a>'; html = pageInbox(r.id); title = 'Inbox \u2014 ' + S.title; }
+  else html = pageHome();
+  $('#crumbs').innerHTML = crumbs; $('#main').innerHTML = html; document.title = title;
+  if (r.view === 'contact') wireContact();
+  if (r.view === 'inbox') wireLogin();
+  $('#main').querySelectorAll('.gallery img, .text figure img').forEach(function (im) { im.onclick = function () { var z = document.createElement('div'); z.id = 'zoom'; z.innerHTML = '<img src="' + im.getAttribute('src') + '" alt="">'; z.onclick = function () { z.remove(); }; document.body.appendChild(z); }; });
+  clearInterval(inboxTimer);
+  if (r.view === 'inbox' && session() && !r.id) inboxTimer = setInterval(loadList, 30000);
+  if (r.view !== 'thread' && r.view !== 'inbox') window.scrollTo(0, 0);
+}
+$('#foot').innerHTML = 'Written by hand after each work session. <a href="#/contact">Write to me</a>.';
+window.addEventListener('hashchange', render);
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { var z = $('#zoom'); if (z) z.remove(); } });
+render();
+})();
+</script>
+</body>
+</html>
