@@ -10,7 +10,7 @@
 // 写真は images/ に入れて本文に ![説明](images/名前.jpg) と書く。まだ無い写真は表示されないだけ。
 
 window.SITE = {
-  url: "https://nexus-network-foundation.github.io/site",      // the real address once the domain is set up (used for RSS and share cards)
+  url: "https://stevenexus.org",      // the real address once the domain is set up (used for RSS and share cards)
   title: "Steve",
   tagline: "What I'm building, written down as I go.",
   author: { name: "Steve", role: "Founder", location: "Switzerland / Japan" },

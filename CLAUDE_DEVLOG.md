@@ -67,4 +67,4 @@ Visitors get a private link to their conversation and see your replies there. If
 
 ## Publishing
 
-Repo: github.com/Nexus-Network-Foundation/site, GitHub Pages from main / root. Address: https://nexus-network-foundation.github.io/site/ . When a domain is bought: add a CNAME file with just the domain, set the DNS records GitHub asks for, and change url at the top of content.js. Never add CNAME before the domain works.
+Repo: github.com/Nexus-Network-Foundation/site, GitHub Pages from main / root. Address: https://stevenexus.org/ . When a domain is bought: add a CNAME file with just the domain, set the DNS records GitHub asks for, and change url at the top of content.js. Never add CNAME before the domain works.
