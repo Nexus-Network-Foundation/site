@@ -387,6 +387,9 @@ window.POSTS = [
   { date: "2026-08-04", project: "unfog", title: "Meeting someone becomes a pin",
     body: "I almost built a separate app for swapping contacts with a QR code. It goes inside Unfog instead.\n\nWhen two people scan each other, both get a private pin where they met. It works even if you have zero followers, which helps with the empty-app problem, and no plain QR app can remember the place.\n\nDatabase first, screens after the first users." },
 
+  { date: "2026-08-15", project: "unfog", title: "Msns is now Unfog",
+    body: "Real name, real domain: [unfog.tech](https://unfog.tech). Same app. The name says what it does." },
+
   { date: "2026-09-17", project: "tet", title: "Back after three months",
     body: "IGCSE took the summer. The repo sat untouched from early July.\n\nFirst job back wasn't features. I read the whole codebase and wrote down what actually exists, then started fixing everything where the whitepaper said one thing and the code did another." },
 
@@ -395,9 +398,6 @@ window.POSTS = [
 
   { date: "2026-09-22", project: "tet", title: "Helsinki seed live, second node in sync",
     body: "Seed node is back at `95.217.158.153:8002`. A fresh node in Switzerland syncs from it and matches the state root at every height.\n\nTransactions sent to a follower now reach the block producer. Before this, `/ledger/transfer` never published to the network and nobody had noticed.\n\nI first blamed gossipsub for the missing transactions and said so on X. It was my bug: three swarms sharing one key, so one PeerId. Fixed it and posted a correction.\n\nlibp2p 0.48 → 0.50, which closes three CVEs. Opened a small PR on rust-libp2p (#6635) that logs when a secondary connection gets no subscriptions, so the next person finds this faster.\n\n![Two nodes, same state root](images/tet-nodes.jpg)" },
-
-  { date: "2026-09-22", project: "unfog", title: "Msns is now Unfog",
-    body: "Real name, real domain: [unfog.tech](https://unfog.tech). Same app. The name says what it does." },
 
   { date: "2026-09-23", project: "kpee", title: "Kpee",
     body: "I wrote the idea on paper this morning and it works tonight.\n\nPaste notes, pick study sheet, blanks, fold & test, flashcards or original, print. One HTML file. Offline. No AI. A USER ZONE at the bottom lets anyone add their own modes, colours or languages.\n\nIt does its own page layout so page numbers come out the same in every browser, A4 or Letter. Flashcards print mirrored on the back so they line up when you cut them.\n\n[Download it](files/kpee.html).\n\n![Printed blanks](images/kpee-print.jpg)" },
