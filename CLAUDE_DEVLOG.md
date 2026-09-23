@@ -67,4 +67,4 @@ Visitors get a private link to their conversation and see your replies there. If
 
 ## Publishing
 
-GitHub repo `site` (Ai0090), Settings → Pages → main / root. The `CNAME` file holds the domain (now `stevenexus.org`; change it if you buy a different one, and change `url` at the top of `content.js` to match).
+Repo: github.com/Nexus-Network-Foundation/site, GitHub Pages from main / root. Address: https://nexus-network-foundation.github.io/site/ . When a domain is bought: add a CNAME file with just the domain, set the DNS records GitHub asks for, and change url at the top of content.js. Never add CNAME before the domain works.
