@@ -2,96 +2,96 @@
 <rss version="2.0">
 <channel>
   <title>Steve</title>
-  <link>https://stevenexus.org/</link>
+  <link>https://nexus-network-foundation.github.io/site/</link>
   <description>What I&apos;m building, written down as I go.</description>
   <language>en</language>
   <item>
     <title>TET: Next: Tmail extras and monitoring</title>
-    <link>https://stevenexus.org/#/p/tet/log</link>
+    <link>https://nexus-network-foundation.github.io/site/#/p/tet/log</link>
     <guid isPermaLink="false">tet-2026-09-23-12</guid>
     <pubDate>Wed, 23 Sep 2026 12:00:00 GMT</pubDate>
     <description>&lt;p&gt;Working on burn-after-read, time-lock and pinned messages for Tmail, a watchdog that restarts the seed if the height stops moving, and an outside check every fifteen minutes.&lt;/p&gt;&lt;p&gt;After that, a note to Manu with how to join: docker compose up, the seed address, and what I found in libp2p.&lt;/p&gt;</description>
   </item>
   <item>
     <title>Kpee: Kpee</title>
-    <link>https://stevenexus.org/#/p/kpee/log</link>
+    <link>https://nexus-network-foundation.github.io/site/#/p/kpee/log</link>
     <guid isPermaLink="false">kpee-2026-09-23-11</guid>
     <pubDate>Wed, 23 Sep 2026 12:00:00 GMT</pubDate>
     <description>&lt;p&gt;I wrote the idea on paper this morning and it works tonight.&lt;/p&gt;&lt;p&gt;Paste notes, pick study sheet, blanks, fold &amp;amp; test, flashcards or original, print. One HTML file. Offline. No AI. A USER ZONE at the bottom lets anyone add their own modes, colours or languages.&lt;/p&gt;&lt;p&gt;It does its own page layout so page numbers come out the same in every browser, A4 or Letter. Flashcards print mirrored on the back so they line up when you cut them.&lt;/p&gt;&lt;p&gt;Download it.&lt;/p&gt;</description>
   </item>
   <item>
     <title>Unfog: Msns is now Unfog</title>
-    <link>https://stevenexus.org/#/p/unfog/log</link>
+    <link>https://nexus-network-foundation.github.io/site/#/p/unfog/log</link>
     <guid isPermaLink="false">unfog-2026-09-22-10</guid>
     <pubDate>Tue, 22 Sep 2026 12:00:00 GMT</pubDate>
     <description>&lt;p&gt;Real name, real domain: unfog.tech. Same app. The name says what it does.&lt;/p&gt;</description>
   </item>
   <item>
     <title>TET: Helsinki seed live, second node in sync</title>
-    <link>https://stevenexus.org/#/p/tet/log</link>
+    <link>https://nexus-network-foundation.github.io/site/#/p/tet/log</link>
     <guid isPermaLink="false">tet-2026-09-22-9</guid>
     <pubDate>Tue, 22 Sep 2026 12:00:00 GMT</pubDate>
     <description>&lt;p&gt;Seed node is back at 95.217.158.153:8002. A fresh node in Switzerland syncs from it and matches the state root at every height.&lt;/p&gt;&lt;p&gt;Transactions sent to a follower now reach the block producer. Before this, /ledger/transfer never published to the network and nobody had noticed.&lt;/p&gt;&lt;p&gt;I first blamed gossipsub for the missing transactions and said so on X. It was my bug: three swarms sharing one key, so one PeerId. Fixed it and posted a correction.&lt;/p&gt;&lt;p&gt;libp2p 0.48 → 0.50, which closes three CVEs. Opened a small PR on rust-libp2p (#6635) that logs when a secondary connection gets no subscriptions, so the next person finds this faster.&lt;/p&gt;</description>
   </item>
   <item>
     <title>TET: Clean-up: fees, cryptography, open routes</title>
-    <link>https://stevenexus.org/#/p/tet/log</link>
+    <link>https://nexus-network-foundation.github.io/site/#/p/tet/log</link>
     <guid isPermaLink="false">tet-2026-09-21-8</guid>
     <pubDate>Mon, 21 Sep 2026 12:00:00 GMT</pubDate>
     <description>&lt;p&gt;Seven fee schedules are now one file. A hidden fee to the founder address is gone, and so is a DEX bug that leaked funds.&lt;/p&gt;&lt;p&gt;Crypto claims now match the code: Kyber round 3 called round 3, ML-DSA set to level 44 everywhere and checked against NIST&amp;apos;s test vectors.&lt;/p&gt;&lt;p&gt;Removed five kinds of routes anyone could call without signing, including one that could replace the whole ledger and seven that could move other people&amp;apos;s money.&lt;/p&gt;&lt;p&gt;185 tests in CI. Six of them guard against old bugs coming back, and each one is proven to fail when the bug is put back. Docker image with the UI inside. 72 GB of old build files deleted.&lt;/p&gt;&lt;p&gt;Also found why two nodes split at block 9828: wall-clock time inside consensus, direct writes to the ledger, and a row dropped without an error.&lt;/p&gt;</description>
   </item>
   <item>
     <title>TET: Back after three months</title>
-    <link>https://stevenexus.org/#/p/tet/log</link>
+    <link>https://nexus-network-foundation.github.io/site/#/p/tet/log</link>
     <guid isPermaLink="false">tet-2026-09-17-7</guid>
     <pubDate>Thu, 17 Sep 2026 12:00:00 GMT</pubDate>
     <description>&lt;p&gt;IGCSE took the summer. The repo sat untouched from early July.&lt;/p&gt;&lt;p&gt;First job back wasn&amp;apos;t features. I read the whole codebase and wrote down what actually exists, then started fixing everything where the whitepaper said one thing and the code did another.&lt;/p&gt;</description>
   </item>
   <item>
     <title>Unfog: Meeting someone becomes a pin</title>
-    <link>https://stevenexus.org/#/p/unfog/log</link>
+    <link>https://nexus-network-foundation.github.io/site/#/p/unfog/log</link>
     <guid isPermaLink="false">unfog-2026-08-04-6</guid>
     <pubDate>Tue, 04 Aug 2026 12:00:00 GMT</pubDate>
     <description>&lt;p&gt;I almost built a separate app for swapping contacts with a QR code. It goes inside Unfog instead.&lt;/p&gt;&lt;p&gt;When two people scan each other, both get a private pin where they met. It works even if you have zero followers, which helps with the empty-app problem, and no plain QR app can remember the place.&lt;/p&gt;&lt;p&gt;Database first, screens after the first users.&lt;/p&gt;</description>
   </item>
   <item>
     <title>Unfog: Live, and the first real post</title>
-    <link>https://stevenexus.org/#/p/unfog/log</link>
+    <link>https://nexus-network-foundation.github.io/site/#/p/unfog/log</link>
     <guid isPermaLink="false">unfog-2026-07-25-5</guid>
     <pubDate>Sat, 25 Jul 2026 12:00:00 GMT</pubDate>
     <description>&lt;p&gt;The app runs against a real database now. I signed up like a stranger would and posted a photo. It&amp;apos;s on the map.&lt;/p&gt;&lt;p&gt;The preview had thirty layers of patches on it, so I rebuilt it from zero with one design: paper white, ink black, one red for routes. Four languages, profile grid, follow and DM, comments, report and block.&lt;/p&gt;</description>
   </item>
   <item>
     <title>Unfog: A map where the fog clears where you walk</title>
-    <link>https://stevenexus.org/#/p/unfog/log</link>
+    <link>https://nexus-network-foundation.github.io/site/#/p/unfog/log</link>
     <guid isPermaLink="false">unfog-2026-06-29-4</guid>
     <pubDate>Mon, 29 Jun 2026 12:00:00 GMT</pubDate>
     <description>&lt;p&gt;New project, working name Msns.&lt;/p&gt;&lt;p&gt;Fog of World showed that clearing a map by walking is addictive. It was App of the Day in 137 countries. It has no people in it. I want the version with friends: your profile is the map of where you&amp;apos;ve been, and photos stay pinned where they were taken.&lt;/p&gt;&lt;p&gt;Three fog layers: mine, everyone&amp;apos;s, and a shared one for a group.&lt;/p&gt;&lt;p&gt;Next.js, Supabase with PostGIS, MapLibre. Not Google Maps.&lt;/p&gt;</description>
   </item>
   <item>
     <title>TET: Files over libp2p, fees on chain</title>
-    <link>https://stevenexus.org/#/p/tet/log</link>
+    <link>https://nexus-network-foundation.github.io/site/#/p/tet/log</link>
     <guid isPermaLink="false">tet-2026-06-09-3</guid>
     <pubDate>Tue, 09 Jun 2026 12:00:00 GMT</pubDate>
     <description>&lt;p&gt;The third piece of the desktop. Files now move over a custom libp2p codec instead of the REST fallback, and the fee settles on chain.&lt;/p&gt;&lt;p&gt;Test: 5.2 MB from my Mac in Switzerland to the server in Helsinki in 7.2 seconds. SHA-256 identical on both ends. Exactly 1000 µTET taken, treasury +250, burn +250, same numbers on both nodes. 15 of 15 interop checks pass.&lt;/p&gt;&lt;p&gt;Coins, messages and files now all work between countries.&lt;/p&gt;&lt;p&gt;The UI got rebuilt too, as a Windows 95 style shell. The main client file went from about 3,100 lines to 2,200.&lt;/p&gt;</description>
   </item>
   <item>
     <title>TET: Applied to the Paradigm Fellowship</title>
-    <link>https://stevenexus.org/#/p/tet/log</link>
+    <link>https://nexus-network-foundation.github.io/site/#/p/tet/log</link>
     <guid isPermaLink="false">tet-2026-06-07-2</guid>
     <pubDate>Sun, 07 Jun 2026 12:00:00 GMT</pubDate>
     <description>&lt;p&gt;Applied to the Paradigm Fellowship 2026 with an introduction from Manu. Eight essays.&lt;/p&gt;</description>
   </item>
   <item>
     <title>TET: Payments through consensus, Tmail working end to end</title>
-    <link>https://stevenexus.org/#/p/tet/log</link>
+    <link>https://nexus-network-foundation.github.io/site/#/p/tet/log</link>
     <guid isPermaLink="false">tet-2026-05-31-1</guid>
     <pubDate>Sun, 31 May 2026 12:00:00 GMT</pubDate>
     <description>&lt;p&gt;Send Coins now goes through consensus instead of writing to the ledger directly.&lt;/p&gt;&lt;p&gt;Same afternoon, Tmail went from nothing to working between two wallets: register a key, write a message, encrypt it (X25519 + Kyber768, ChaCha20), sign it (Ed25519 + ML-DSA-44), gossip it, decrypt it on the other side. The other wallet showed &amp;apos;Hello&amp;apos;.&lt;/p&gt;&lt;p&gt;One thing for the record. The Rust Kyber crate is CRYSTALS-Kyber round 3, not FIPS 203 ML-KEM, and the two aren&amp;apos;t byte-compatible. The whitepaper now says round 3 until I migrate.&lt;/p&gt;</description>
   </item>
   <item>
     <title>TET: Genesis draft v1.0</title>
-    <link>https://stevenexus.org/#/p/tet/log</link>
+    <link>https://nexus-network-foundation.github.io/site/#/p/tet/log</link>
     <guid isPermaLink="false">tet-2026-04-28-0</guid>
     <pubDate>Tue, 28 Apr 2026 12:00:00 GMT</pubDate>
     <description>&lt;p&gt;First full draft of the whitepaper.&lt;/p&gt;&lt;p&gt;TET is a Layer 1 in Rust on libp2p. Transactions are signed with ML-DSA as well as Ed25519, so the chain still holds once quantum computers can break the classical signatures.&lt;/p&gt;&lt;p&gt;Two earlier tries are archived: one on Substrate (tet-core-node) and one on Solana (nexus-onchain). Both taught me what I didn&amp;apos;t want. This one starts from nothing.&lt;/p&gt;&lt;p&gt;The product on top isn&amp;apos;t a wallet. It&amp;apos;s a desktop: send coins, message, share files, one key.&lt;/p&gt;</description>
