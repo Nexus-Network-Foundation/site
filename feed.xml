@@ -20,32 +20,32 @@
     <description>&lt;p&gt;I wrote the idea on paper this morning and it works tonight.&lt;/p&gt;&lt;p&gt;Paste notes, pick study sheet, blanks, fold &amp;amp; test, flashcards or original, print. One HTML file. Offline. No AI. A USER ZONE at the bottom lets anyone add their own modes, colours or languages.&lt;/p&gt;&lt;p&gt;It does its own page layout so page numbers come out the same in every browser, A4 or Letter. Flashcards print mirrored on the back so they line up when you cut them.&lt;/p&gt;&lt;p&gt;Download it.&lt;/p&gt;</description>
   </item>
   <item>
-    <title>Unfog: Msns is now Unfog</title>
-    <link>https://nexus-network-foundation.github.io/site/#/p/unfog/log</link>
-    <guid isPermaLink="false">unfog-2026-09-22-10</guid>
-    <pubDate>Tue, 22 Sep 2026 12:00:00 GMT</pubDate>
-    <description>&lt;p&gt;Real name, real domain: unfog.tech. Same app. The name says what it does.&lt;/p&gt;</description>
-  </item>
-  <item>
     <title>TET: Helsinki seed live, second node in sync</title>
     <link>https://nexus-network-foundation.github.io/site/#/p/tet/log</link>
-    <guid isPermaLink="false">tet-2026-09-22-9</guid>
+    <guid isPermaLink="false">tet-2026-09-22-10</guid>
     <pubDate>Tue, 22 Sep 2026 12:00:00 GMT</pubDate>
     <description>&lt;p&gt;Seed node is back at 95.217.158.153:8002. A fresh node in Switzerland syncs from it and matches the state root at every height.&lt;/p&gt;&lt;p&gt;Transactions sent to a follower now reach the block producer. Before this, /ledger/transfer never published to the network and nobody had noticed.&lt;/p&gt;&lt;p&gt;I first blamed gossipsub for the missing transactions and said so on X. It was my bug: three swarms sharing one key, so one PeerId. Fixed it and posted a correction.&lt;/p&gt;&lt;p&gt;libp2p 0.48 → 0.50, which closes three CVEs. Opened a small PR on rust-libp2p (#6635) that logs when a secondary connection gets no subscriptions, so the next person finds this faster.&lt;/p&gt;</description>
   </item>
   <item>
     <title>TET: Clean-up: fees, cryptography, open routes</title>
     <link>https://nexus-network-foundation.github.io/site/#/p/tet/log</link>
-    <guid isPermaLink="false">tet-2026-09-21-8</guid>
+    <guid isPermaLink="false">tet-2026-09-21-9</guid>
     <pubDate>Mon, 21 Sep 2026 12:00:00 GMT</pubDate>
     <description>&lt;p&gt;Seven fee schedules are now one file. A hidden fee to the founder address is gone, and so is a DEX bug that leaked funds.&lt;/p&gt;&lt;p&gt;Crypto claims now match the code: Kyber round 3 called round 3, ML-DSA set to level 44 everywhere and checked against NIST&amp;apos;s test vectors.&lt;/p&gt;&lt;p&gt;Removed five kinds of routes anyone could call without signing, including one that could replace the whole ledger and seven that could move other people&amp;apos;s money.&lt;/p&gt;&lt;p&gt;185 tests in CI. Six of them guard against old bugs coming back, and each one is proven to fail when the bug is put back. Docker image with the UI inside. 72 GB of old build files deleted.&lt;/p&gt;&lt;p&gt;Also found why two nodes split at block 9828: wall-clock time inside consensus, direct writes to the ledger, and a row dropped without an error.&lt;/p&gt;</description>
   </item>
   <item>
     <title>TET: Back after three months</title>
     <link>https://nexus-network-foundation.github.io/site/#/p/tet/log</link>
-    <guid isPermaLink="false">tet-2026-09-17-7</guid>
+    <guid isPermaLink="false">tet-2026-09-17-8</guid>
     <pubDate>Thu, 17 Sep 2026 12:00:00 GMT</pubDate>
     <description>&lt;p&gt;IGCSE took the summer. The repo sat untouched from early July.&lt;/p&gt;&lt;p&gt;First job back wasn&amp;apos;t features. I read the whole codebase and wrote down what actually exists, then started fixing everything where the whitepaper said one thing and the code did another.&lt;/p&gt;</description>
+  </item>
+  <item>
+    <title>Unfog: Msns is now Unfog</title>
+    <link>https://nexus-network-foundation.github.io/site/#/p/unfog/log</link>
+    <guid isPermaLink="false">unfog-2026-08-15-7</guid>
+    <pubDate>Sat, 15 Aug 2026 12:00:00 GMT</pubDate>
+    <description>&lt;p&gt;Real name, real domain: unfog.tech. Same app. The name says what it does.&lt;/p&gt;</description>
   </item>
   <item>
     <title>Unfog: Meeting someone becomes a pin</title>
