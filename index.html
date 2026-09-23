@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Steve</title>
 <meta name="description" content="TET, Unfog and Kpee. What I'm building, written down as I go.">
+<!--og-->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Steve">
+<meta property="og:description" content="What I&apos;m building, written down as I go.">
+<meta property="og:image" content="https://stevenexus.org/og.jpg">
+<meta property="og:url" content="https://stevenexus.org/">
+<meta name="twitter:card" content="summary_large_image">
+<!--/og-->
+<link rel="alternate" type="application/rss+xml" title="Steve" href="feed.xml">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%235a7fb0'/%3E%3Crect x='3' y='4' width='10' height='2' fill='%23fff'/%3E%3Crect x='3' y='7' width='10' height='2' fill='%23fff'/%3E%3Crect x='3' y='10' width='6' height='2' fill='%23fff'/%3E%3C/svg%3E">
 <style>
 body{margin:0;background:#e9ebee;color:#000;font:13px/1.5 Verdana,Arial,Helvetica,sans-serif}
@@ -88,6 +97,18 @@ table{border-collapse:collapse;width:100%}
 .inbox tr.unread td{font-weight:bold}
 .inbox .prev{font-weight:normal;color:#555;font-size:12px}
 .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.now{border:1px solid #c5d0de;margin-bottom:14px}
+.now .cols{display:grid;grid-template-columns:1fr 1fr}
+.now .col{padding:8px 10px}
+.now .col+.col{border-left:1px solid #d6d9de}
+.now h3{font-size:12px;margin:0 0 6px}
+.now ul{margin:0;padding-left:1.3em}
+.now li{margin:.25em 0}
+.now .tag{font-size:10px;color:#3c5a8a;margin-right:4px}
+.stats{font-size:11px;color:#333;padding:6px 10px;border-top:1px solid #d6d9de;background:#f7f8fa}
+.stats span{margin-right:14px;white-space:nowrap}
+.stats b{color:#000}
+@media (max-width:640px){ .now .cols{grid-template-columns:1fr} .now .col+.col{border-left:0;border-top:1px solid #d6d9de} }
 #foot{margin:12px 0 30px;color:#666;font-size:11px;text-align:center}
 @media (max-width:640px){
   .post{grid-template-columns:1fr}
@@ -178,12 +199,37 @@ function pageHome() {
     return '<tr class="windowbg"><td style="width:70px"><a href="#/p/' + p.project + '">' + esc(P[p.project].name) + '</a></td><td><a href="#/p/' + p.project + '/log">' + esc(p.title) + '</a></td><td class="last">' + fmtDate(p.date) + '</td></tr>';
   }).join('');
   var intro = ABOUT.split(/\n\s*\n/).map(function (s) { return s.trim(); }).filter(Boolean)[0] || '';
-  return '<div class="note">' + inline(intro) + ' <a href="#/about">More about me</a></div>'
+  var N = window.NOW, nowBox = '';
+  if (N) {
+    var tag = function (id) { return P[id] ? '<span class="tag">' + esc(P[id].name) + '</span>' : ''; };
+    nowBox = '<div class="now"><div class="catbg">Now <span style="font-weight:normal">(updated ' + fmtDate(N.updated) + ')</span></div><div class="cols">'
+      + '<div class="col"><h3>What I\'m doing</h3><ul>' + (N.doing || []).map(function (d) { return '<li>' + tag(d[0]) + inline(d[1]) + '</li>'; }).join('') + '</ul></div>'
+      + '<div class="col"><h3>Where you can help</h3><ul>' + (N.help || []).map(function (d) { return '<li>' + tag(d[0]) + (d[2] ? '<a href="' + esc(d[2]) + '"' + (/^https?:/.test(d[2]) ? ' rel="noopener"' : '') + '>' + esc(d[1]) + '</a>' : esc(d[1])) + '</li>'; }).join('') + ' <li><a href="#/contact">Or write to me.</a></li></ul></div>'
+      + '</div><div class="stats" id="stats" hidden></div></div>';
+    setTimeout(loadStats, 0);
+  }
+  var shipped = (window.SHIPPED || []).length ? '<table style="margin-top:14px"><tr><th class="catbg" colspan="2">Outside my repos</th></tr>' + window.SHIPPED.map(function (s) { return '<tr class="windowbg"><td><a href="' + esc(s[2]) + '" rel="noopener">' + esc(s[1]) + '</a></td><td class="last">' + fmtDate(s[0]) + '</td></tr>'; }).join('') + '</table>' : '';
+  return nowBox + '<div class="note">' + inline(intro) + ' <a href="#/about">More about me</a></div>'
     + '<table><tr><th class="catbg">Projects</th><th class="catbg num">Posts</th><th class="catbg last">Last post</th></tr>' + rows + '</table>'
-    + '<table style="margin-top:14px"><tr><th class="catbg" colspan="3">Latest</th></tr>' + recent + '</table>';
+    + '<table style="margin-top:14px"><tr><th class="catbg" colspan="3">Latest</th></tr>' + recent + '</table>' + shipped;
+}
+/* stats.json is written once a day by the GitHub Action (tools/build.mjs). Anything missing is simply not shown. */
+function loadStats() {
+  fetch('stats.json', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (s) {
+    var el = $('#stats'); if (!s || !el) return;
+    var parts = [];
+    if (s.tet && s.tet.seed_online != null) parts.push('TET seed <b>' + (s.tet.seed_online ? 'online' : 'offline') + '</b>');
+    if (s.tet && s.tet.height != null) parts.push('TET height <b>' + Number(s.tet.height).toLocaleString('en') + '</b>');
+    if (s.unfog && s.unfog.users != null) parts.push('Unfog users <b>' + Number(s.unfog.users).toLocaleString('en') + '</b>');
+    if (s.kpee && s.kpee.downloads != null) parts.push('Kpee downloads <b>' + Number(s.kpee.downloads).toLocaleString('en') + '</b>');
+    if (!parts.length) return;
+    el.innerHTML = parts.map(function (p) { return '<span>' + p + '</span>'; }).join('') + (s.checked_at ? '<span class="muted">checked ' + fmtTime(s.checked_at) + '</span>' : '');
+    el.hidden = false;
+  }).catch(function () {});
 }
 function pageAbout() {
-  return postBox(Object.assign(me(''), { title: 'About me', when: '', html: md(ABOUT) }));
+  var sh = (window.SHIPPED || []).map(function (s) { return '- [' + s[1] + '](' + s[2] + ') (' + fmtDate(s[0]) + ')'; }).join('\n');
+  return postBox(Object.assign(me(''), { title: 'About me', when: '', html: md(ABOUT + (sh ? '\n\n## Outside my repos\n\n' + sh : '')) }));
 }
 var TABS = [['', 'Overview'], ['use', 'How to use'], ['how', 'How it works'], ['log', 'Log'], ['files', 'Files & pictures']];
 function pageProject(id, tab) {
@@ -380,7 +426,7 @@ function render() {
   if (r.view === 'inbox' && session() && !r.id) inboxTimer = setInterval(loadList, 30000);
   if (r.view !== 'thread' && r.view !== 'inbox') window.scrollTo(0, 0);
 }
-$('#foot').innerHTML = 'Written by hand after each work session. <a href="#/contact">Write to me</a>.';
+$('#foot').innerHTML = 'Written by hand after each work session. <a href="#/contact">Write to me</a> &middot; <a href="feed.xml">RSS</a>';
 window.addEventListener('hashchange', render);
 document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { var z = $('#zoom'); if (z) z.remove(); } });
 render();

@@ -1,0 +1,29 @@
+name: build
+on:
+  push:
+    branches: [main]
+    paths: [content.js, tools/build.mjs]
+  schedule:
+    - cron: '17 6 * * *'        # once a day, for stats.json
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: node tools/build.mjs
+        env:
+          TET_SEED: ${{ vars.TET_SEED }}
+          TET_STATE_URL: ${{ vars.TET_STATE_URL }}
+          UNFOG_STATS_URL: ${{ vars.UNFOG_STATS_URL }}
+          KPEE_REPO: ${{ vars.KPEE_REPO }}
+      - name: commit if anything changed
+        run: |
+          git config user.name "site-build"
+          git config user.email "site-build@users.noreply.github.com"
+          git add feed.xml stats.json index.html
+          git diff --cached --quiet || (git commit -m "build: feed and stats" && git push)

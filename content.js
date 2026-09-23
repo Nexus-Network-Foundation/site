@@ -10,6 +10,7 @@
 // 写真は images/ に入れて本文に ![説明](images/名前.jpg) と書く。まだ無い写真は表示されないだけ。
 
 window.SITE = {
+  url: "https://stevenexus.org",      // the real address once the domain is set up (used for RSS and share cards)
   title: "Steve",
   tagline: "What I'm building, written down as I go.",
   author: { name: "Steve", role: "Founder", location: "Switzerland / Japan" },
@@ -21,6 +22,27 @@ window.SITE = {
     ["Email", "mailto:tetsteve@proton.me", "tetsteve@proton.me"]
   ]
 };
+
+// ---------------------------------------------------------------------------
+// NOW — the box at the top of the home page. Change it whenever it stops being true.
+window.NOW = {
+  updated: "2026-09-23",
+  doing: [
+    ["tet", "Tmail: burn-after-read, time-lock and pinned messages."],
+    ["tet", "A watchdog on the Helsinki seed, and an outside check every fifteen minutes."],
+    ["kpee", "Getting Kpee in front of the first students and teachers."]
+  ],
+  help: [
+    ["tet", "Run a node for a week and tell me where it broke.", "#/p/tet/use"],
+    ["unfog", "Use Unfog for a day and tell me what felt wrong in the first minute.", "https://unfog.tech"],
+    ["kpee", "Print one sheet from your own notes and tell me which blank it got wrong.", "files/kpee.html"]
+  ]
+};
+
+// SHIPPED — work that lives outside my own repos.
+window.SHIPPED = [
+  ["2026-09-22", "rust-libp2p PR #6635: log when a secondary connection gets no subscriptions", "https://github.com/libp2p/rust-libp2p/pull/6635"]
+];
 
 // ---------------------------------------------------------------------------
 window.ABOUT = `

@@ -10,7 +10,7 @@ The public site repo is at ~/site (github.com/Ai0090/site).
 At the end of every session where something shipped, was fixed, or was found:
 1. Append ONE entry to the END of window.POSTS in ~/site/content.js:
    { date: "YYYY-MM-DD", project: "tet" | "unfog" | "kpee", title: "...", body: "..." }
-2. If a project's "Where it is now" / "What's live" list is now wrong, fix that line in the same file.
+2. If a project's "Where it is now" / "What's live" list, or window.NOW, is now wrong, fix it in the same file.
 3. If there's a screenshot worth showing, save it to ~/site/images/<project>-<topic>.jpg
    (max 1100px wide) and put ![caption](images/<name>.jpg) in the body.
 4. cd ~/site && git add -A && git commit -m "log: <title>" && git push
@@ -21,6 +21,16 @@ Writing rules for the entry:
 - Never write secrets: no keys, tokens, passwords, private IPs, personal addresses, school name.
 - Don't claim anything the code doesn't do yet.
 ```
+
+## Things that update themselves
+
+- **feed.xml (RSS)** and the **share card tags** are rebuilt by the GitHub Action every time `content.js` changes. Don't edit them by hand.
+- **stats.json** is rebuilt once a day. Turn each number on by adding a repository variable (Settings → Secrets and variables → Actions → Variables). Anything not set is simply not shown.
+  - `TET_SEED` = `95.217.158.153:8002` → "TET seed online/offline"
+  - `TET_STATE_URL` = a public URL returning `/ledger/state` → block height (only if you choose to expose one)
+  - `UNFOG_STATS_URL` = a URL returning `{"users": 123}` → Unfog users
+  - `KPEE_REPO` = `Ai0090/kpee` → Kpee downloads (counts files attached to GitHub Releases)
+- **The Now box** (top of the home page) is `window.NOW` in `content.js`. Update it when it stops being true; ask Claude Code to do it as part of the log step.
 
 ## From a chat with Claude
 
@@ -57,4 +67,4 @@ Visitors get a private link to their conversation and see your replies there. If
 
 ## Publishing
 
-GitHub repo `site` (Ai0090), Settings → Pages → main / root. For jikoman.org, add a `CNAME` file containing `jikoman.org` and point the domain's DNS at GitHub Pages.
+GitHub repo `site` (Ai0090), Settings → Pages → main / root. The `CNAME` file holds the domain (now `stevenexus.org`; change it if you buy a different one, and change `url` at the top of `content.js` to match).
