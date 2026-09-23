@@ -6,7 +6,7 @@ The site reads everything from `content.js`. After any work session, the log get
 
 ```
 ## Devlog
-The public site repo is at ~/site (github.com/Ai0090/site).
+The public site repo is at ~/site (github.com/Nexus-Network-Foundation/site).
 At the end of every session where something shipped, was fixed, or was found:
 1. Append ONE entry to the END of window.POSTS in ~/site/content.js:
    { date: "YYYY-MM-DD", project: "tet" | "unfog" | "kpee", title: "...", body: "..." }
