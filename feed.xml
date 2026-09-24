@@ -6,11 +6,11 @@
   <description>What I&apos;m building, written down as I go.</description>
   <language>en</language>
   <item>
-    <title>Kpee: Formulas, chemistry, graphs and maps</title>
+    <title>Kpee: Formulas, charts, maps and Word files</title>
     <link>https://stevenexus.org/#/p/kpee/log</link>
     <guid isPermaLink="false">kpee-2026-09-24-13</guid>
     <pubDate>Thu, 24 Sep 2026 12:00:00 GMT</pubDate>
-    <description>&lt;p&gt;Kpee can typeset maths now. Inline is $x^2$, and a display equation is $$ on a line of its own. Chemistry uses the same syntax: \ce{H2O}.&lt;/p&gt;&lt;p&gt;Charts are a block: open with ::: bar Title, paste data rows like A, 12 straight out of Excel, close with :::. The types are bar, hbar, line, pie, donut, scatter and map. A map takes region: europe on the first line.&lt;/p&gt;&lt;p&gt;This costs size. The file went from 165 KB to about 920 KB, nearly all of it KaTeX and its fonts. I bundled them instead of pulling them from a CDN, so it is still one file that needs no network.&lt;/p&gt;</description>
+    <description>&lt;p&gt;Kpee typesets maths and chemistry now. Inline is $x^2$, a display equation is $$ on a line of its own, and chemistry is \ce{H2O}.&lt;/p&gt;&lt;p&gt;Charts are a block: open with ::: bar Title, paste data rows like A, 12 straight out of Excel, close with :::. Bar, horizontal bar, line, pie, donut and scatter, plus a world map — the map takes region: world on the first line.&lt;/p&gt;&lt;p&gt;Word files work too. Drop a .docx on the page and it opens, no converting first. There is an Open file button as well, for when dragging is awkward.&lt;/p&gt;&lt;p&gt;Three bugs went with it. The preview threw a ResizeObserver error. A numbered list written directly after a bullet list got swallowed into the bullets. The paper drifted out of position when you zoomed in.&lt;/p&gt;&lt;p&gt;The file went from 165 KB to about 930 KB, nearly all of it KaTeX and its fonts. It still runs offline and there is no AI in it.&lt;/p&gt;</description>
   </item>
   <item>
     <title>TET: Next: Tmail extras and monitoring</title>
