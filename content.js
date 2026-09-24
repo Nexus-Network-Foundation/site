@@ -301,13 +301,23 @@ It's one HTML file. Double-click it and it opens in your browser. No install, no
 
 ![Fill in the blanks, printed](images/kpee-print.jpg)
 
+## Maths, chemistry, charts and maps
+
+Formulas are LaTeX. \`$x^2$\` inside a line, or \`$$\` on a line of its own for a big one. Chemistry is the same syntax: \`\\ce{H2O}\`.
+
+Charts and maps are a block I type in the notes: bar, horizontal bar, line, pie, donut, scatter, and a map that takes country names or points. Kpee draws them itself, so they print with no internet.
+
+## Word files
+
+I can drop a .docx on the window, or press Open file. It also takes .txt, .md and .html. The browser unzips the Word file on its own, so there is no library and nothing is uploaded.
+
 ## Who uses it
 
 Students printing revision sheets the night before a test. Teachers making a blanks worksheet from their own notes in a minute. Anyone who wants a flashcard deck without making it card by card.
 `,
   use: `
 1. [Download kpee.html](files/kpee.html) and double-click it. (Or just [open it here](files/kpee.html).)
-2. Paste your notes. From Word, Google Docs, a website or Excel; bold, colours and highlights come across.
+2. Paste your notes. From Word, Google Docs, a website or Excel; bold, colours and highlights come across. Or drop a Word file (.docx), .txt or .md on the window, or press Open file.
 3. Pick a kind of print at the top.
 4. Press Print.
 
@@ -326,6 +336,39 @@ Term — definition      same, without marks
 \`\`\`
 
 Cells copied from Excel become a table. A two-column table (word, meaning) becomes flashcards.
+
+## Maths and chemistry
+
+\`\`\`
+Water is $H_2O$ and a circle is $\\pi r^2$.
+
+$$
+E = mc^2
+$$
+
+\\ce{2H2 + O2 -> 2H2O}
+\`\`\`
+
+## Charts and maps
+
+\`\`\`
+::: bar Marks by subject
+unit: %
+Maths, 82
+Physics, 74
+History, 61
+:::
+\`\`\`
+
+A map is the same block. Country names, or \`lat, lon, label\` for points.
+
+\`\`\`
+::: map Where we have been
+region: world
+Japan, 4
+Switzerland, 2
+:::
+\`\`\`
 
 Keys: Ctrl+B bold, Ctrl+U underline, Ctrl+E centre, Ctrl+P print, F1 help. On a Mac, ⌘ instead of Ctrl.
 
