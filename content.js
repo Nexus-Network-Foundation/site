@@ -14,12 +14,12 @@ window.SITE = {
   title: "Steve",
   tagline: "What I'm building, written down as I go.",
   author: { name: "Steve", role: "Founder", location: "Switzerland / Japan" },
-  email: "tetsteve@proton.me",
+  email: "steve@stevenexus.org",
   contact: [
     ["X", "https://x.com/stevenexusz", "@stevenexusz"],
     ["GitHub", "https://github.com/Ai0090", "Ai0090"],
     ["GitHub (TET)", "https://github.com/TET-Network-Foundation", "TET-Network-Foundation"],
-    ["Email", "mailto:tetsteve@proton.me", "tetsteve@proton.me"]
+    ["Email", "mailto:steve@stevenexus.org", "steve@stevenexus.org"]
   ]
 };
 
