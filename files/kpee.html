@@ -62,22 +62,22 @@ input[type=color]{width:26px;height:20px;padding:0 1px;border:1px solid var(--dk
 #modeDesc{margin:0 6px 2px;padding:3px 8px;background:#ffffe1;border:1px solid #000;flex:0 0 auto;min-height:20px}
 #modeDesc b{margin-inline-end:4px}
 
-.main{flex:1;display:grid;grid-template-columns:minmax(260px,36%) 1fr;gap:6px;padding:4px 6px 6px;min-height:0}
-.pane{display:flex;flex-direction:column;min-height:0}
+.main{flex:1;display:grid;grid-template-columns:minmax(260px,36%) minmax(0,1fr);gap:6px;padding:4px 6px 6px;min-height:0}
+.pane{display:flex;flex-direction:column;min-height:0;min-width:0}
 .pane .cap{margin:0 0 3px;font-weight:bold}
 .fmtbar{display:flex;flex-wrap:wrap;gap:2px;align-items:center;margin-bottom:3px}
 .fmtbar .w95.sm{height:22px}
 #src{flex:1;min-height:0;resize:none;width:100%;font:13px/1.5 Consolas,"Courier New","BIZ UDGothic",monospace;padding:6px 8px;background:#fff;border:1px solid;border-color:var(--dk) #fff #fff var(--dk);box-shadow:inset 1px 1px var(--dkr),inset -1px -1px var(--lt);outline:none;white-space:pre-wrap;color:#000;tab-size:4}
 .desk{flex:1;min-height:0;overflow-x:auto;overflow-y:scroll;background:#7b7b7b;border:1px solid;border-color:var(--dk) #fff #fff var(--dk);box-shadow:inset 1px 1px var(--dkr);padding:14px}
 #paperWrap{margin:0 auto}
-#paper{transform-origin:top left}
+#paper{transform-origin:top left;margin:0}
 .statusbar{display:flex;gap:3px;padding:3px 2px 1px;flex:0 0 auto}
 .statusbar span{padding:1px 6px;border:1px solid;border-color:var(--dk) #fff #fff var(--dk);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .statusbar .fl{flex:1;min-width:0}
 .statusbar .fx{flex:0 0 auto}
 @media (max-width:760px){
   #app{inset:4px}
-  .main{grid-template-columns:1fr;grid-template-rows:40% 1fr}
+  .main{grid-template-columns:minmax(0,1fr);grid-template-rows:40% minmax(0,1fr)}
   .statusbar .hint{display:none}
   fieldset.look,fieldset.pagegrp{max-width:none}
 }
@@ -206,6 +206,7 @@ input[type=color]{width:26px;height:20px;padding:0 1px;border:1px solid var(--dk
 
   <div class="menubar">
     <button class="w95" id="bNew" data-i18n="new">New</button>
+    <button class="w95" id="bOpen" data-i18n="openFile">Open file</button><input type="file" id="fileIn" accept=".docx,.txt,.md,.markdown,.html,.htm,.csv,.tsv" hidden>
     <button class="w95" id="bDocs" data-i18n="docs">Documents</button>
     <button class="w95" id="bSave" data-i18n="save">Save</button>
     <button class="w95" id="bClear" data-i18n="clearAll">Delete all</button>
@@ -368,10 +369,10 @@ const EN = {
   noBlanks: 'No key terms found. Mark them with **bold** or [[term]], or write lines like "Term is ..." / "Term — ...".',
   noCards: 'No flashcards found. Write lines like "Term — definition", "Term is …" or "**Term**: definition", or paste a two-column table.',
   hint: 'Ctrl+P print · Ctrl+S save · Ctrl+B bold · Alt+1–6 kind of print · F1 help', fit: 'Fit', paperSize: 'Paper',
-  dropOffice: 'Open the file in Word / Excel, copy the text and paste it here.',
+  dropOffice: 'Kpee opens .docx, .txt, .md and .html. For other files, open them, copy the text and paste it here.', openFile: 'Open file', docxFail: 'Could not read this Word file. Open it in Word, copy the text and paste it here.',
   pasteFail: 'The browser blocked clipboard access. Click the text box and press Ctrl+V instead.',
   empty: 'Paste your notes on the left.',
-  step1: 'Paste your notes (Ctrl+V) — from Word, Google Docs, a website or Excel.',
+  step1: 'Paste your notes (Ctrl+V), or drop a Word file (.docx) here.',
   step2: 'Choose what kind of print you want at the top.',
   step3: 'Press Print (Ctrl+P).',
   cheatTitle: 'You can also type these', cheatDef: 'becomes a blank and a flashcard',
@@ -394,7 +395,7 @@ const EN = {
   styleStudy: 'Study', styleWhite: 'White paper', styleEssay: 'Essay',
   aboutHtml: '<p><b>Kpee — Kazuma Print Easy Efficient</b></p>'
     + '<p>Kpee is one file. It runs inside your browser, works without internet, and needs no install. Chrome, Edge, Safari, Firefox.</p>'
-    + '<p><b>Use:</b> <kbd>Ctrl+V</kbd> paste → choose a kind of print at the top → <kbd>Ctrl+P</kbd> print. (Mac: <kbd>⌘</kbd> instead of Ctrl.) You can also drop a .txt file onto the window.</p>'
+    + '<p><b>Use:</b> <kbd>Ctrl+V</kbd> paste → choose a kind of print at the top → <kbd>Ctrl+P</kbd> print. (Mac: <kbd>⌘</kbd> instead of Ctrl.) You can also drop a Word file (.docx), .txt or .md onto the window, or use Open file.</p>'
     + '<p><b>Editing:</b> <kbd>Ctrl+B</kbd> bold (= key term), <kbd>Ctrl+U</kbd> underline, <kbd>Ctrl+E</kbd> centre, plus highlighter and text colour buttons above the text box. Colours, highlights and underlines from Word and Google Docs are kept when you paste.</p>'
     + '<p><b>Flashcards:</b> write "Term — definition" lines, or paste a two-column table. Print double-sided and cut, or press Practice to study on screen.</p>'
     + '<p><b>Maths:</b> <code>$v = \\frac{d}{t}$</code> inside a line, or <code>$$</code> on its own line before and after a big formula. LaTeX, including <code>\\ce{2H2 + O2 -> 2H2O}</code> for chemistry.</p>'
@@ -510,7 +511,7 @@ function parse(text) {
     if (/^([-_=*])\1{2,}$/.test(t)) { blocks.push({ type: 'hr' }); i++; continue; }
     if (LIST_RE.test(raw)) {
       const ordered = OL_RE.test(raw); const items = [];
-      while (i < lines.length && LIST_RE.test(lines[i])) { items.push(lines[i].replace(LIST_RE, '').trim()); i++; }
+      while (i < lines.length && LIST_RE.test(lines[i]) && OL_RE.test(lines[i]) === ordered) { items.push(lines[i].replace(LIST_RE, '').trim()); i++; }   // a new list starts when bullets switch to numbers
       blocks.push({ type: ordered ? 'ol' : 'ul', items }); continue;
     }
     const prevBlank = i === 0 || blank(lines[i - 1]);
@@ -1012,6 +1013,139 @@ function htmlToText(html) {
 }
 Kpee.util.htmlToText = htmlToText;
 
+/* ---------------- Word files (.docx) → Kpee text ----------------
+   A .docx is a zip of XML files. The browser's own DecompressionStream unpacks it, so no library
+   and no internet are needed. Headings, bold, underline, strike, colour, highlight, lists, tables
+   and centred lines come across; pictures and text boxes are left out. */
+async function unzip(buf, wanted) {
+  const u8 = new Uint8Array(buf), dv = new DataView(buf), out = {};
+  let eocd = -1;
+  for (let i = u8.length - 22; i >= Math.max(0, u8.length - 65557); i--) if (dv.getUint32(i, true) === 0x06054b50) { eocd = i; break; }
+  if (eocd < 0) throw new Error('not a zip file');
+  let p = dv.getUint32(eocd + 16, true);
+  const count = dv.getUint16(eocd + 10, true), dec = new TextDecoder('utf-8');
+  for (let n = 0; n < count && dv.getUint32(p, true) === 0x02014b50; n++) {
+    const method = dv.getUint16(p + 10, true), csize = dv.getUint32(p + 20, true);
+    const nlen = dv.getUint16(p + 28, true), xlen = dv.getUint16(p + 30, true), clen = dv.getUint16(p + 32, true);
+    const local = dv.getUint32(p + 42, true), name = dec.decode(u8.subarray(p + 46, p + 46 + nlen));
+    p += 46 + nlen + xlen + clen;
+    if (!wanted.includes(name)) continue;
+    const start = local + 30 + dv.getUint16(local + 26, true) + dv.getUint16(local + 28, true);
+    const data = u8.subarray(start, start + csize);
+    if (method === 0) out[name] = dec.decode(data);
+    else if (method === 8) {
+      if (typeof DecompressionStream === 'undefined') throw new Error('this browser cannot unzip; update it');
+      const stream = new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+      out[name] = dec.decode(await new Response(stream).arrayBuffer());
+    }
+  }
+  return out;
+}
+async function docxToText(buf) {
+  const files = await unzip(buf, ['word/document.xml', 'word/styles.xml', 'word/numbering.xml']);
+  if (!files['word/document.xml']) throw new Error('no document.xml');
+  const xml = s => new DOMParser().parseFromString(s, 'application/xml');
+  const kids = (el, name) => Array.from(el ? el.children : []).filter(c => c.localName === name);
+  const kid = (el, name) => kids(el, name)[0] || null;
+  const attr = (el, name) => { if (!el) return null; for (const a of el.attributes) if (a.localName === name) return a.value; return null; };
+  const on = el => { if (!el) return false; const v = attr(el, 'val'); return v == null || !/^(0|false|off|none)$/i.test(v); };
+  // style id → heading level / title  (works for localised Word too: the style *name* stays "heading 1")
+  const headOf = {}, styleNum = {}, basedOn = {}, listName = {};
+  if (files['word/styles.xml']) for (const s of xml(files['word/styles.xml']).getElementsByTagNameNS('*', 'style')) {
+    const id = attr(s, 'styleId'), nm = attr(kid(s, 'name'), 'val') || '';
+    let m = /^heading\s*(\d)$/i.exec(nm);
+    if (m) headOf[id] = Math.min(3, +m[1]); else if (/^(title)$/i.test(nm)) headOf[id] = 1; else if (/^(subtitle)$/i.test(nm)) headOf[id] = 2;
+    const np = kid(kid(s, 'pPr'), 'numPr');                                   // lists that come from the style
+    if (np) styleNum[id] = { id: attr(kid(np, 'numId'), 'val'), il: attr(kid(np, 'ilvl'), 'val') };
+    const bo = attr(kid(s, 'basedOn'), 'val'); if (bo) basedOn[id] = bo;
+    if (/^list (bullet|number)/i.test(nm)) listName[id] = /bullet/i.test(nm) ? 'bullet' : 'decimal';
+  }
+  const numFromStyle = id => { for (let k = 0, x = id; x && k < 10; k++, x = basedOn[x]) if (styleNum[x]) return styleNum[x]; return null; };
+  // list id + level → bullet or numbered
+  const fmtOf = {};
+  if (files['word/numbering.xml']) {
+    const nx = xml(files['word/numbering.xml']), abs = {};
+    for (const a of nx.getElementsByTagNameNS('*', 'abstractNum')) { const lv = {}; for (const l of kids(a, 'lvl')) lv[attr(l, 'ilvl')] = attr(kid(l, 'numFmt'), 'val'); abs[attr(a, 'abstractNumId')] = lv; }
+    for (const n of nx.getElementsByTagNameNS('*', 'num')) fmtOf[attr(n, 'numId')] = abs[attr(kid(n, 'abstractNumId'), 'val')] || {};
+  }
+  const out = [], counters = {};
+  const hex = v => v && /^[0-9a-f]{6}$/i.test(v) && v.toLowerCase() !== '000000' ? '#' + v.toLowerCase() : '';
+  function runs(p) {                               // → [{t, fmt}]
+    const res = [];
+    const walk = el => {
+      for (const c of el.children) {
+        if (c.localName === 'r') {
+          const pr = kid(c, 'rPr'), f = {
+            b: on(kid(pr, 'b')), u: !!kid(pr, 'u') && attr(kid(pr, 'u'), 'val') !== 'none', s: on(kid(pr, 'strike')) || on(kid(pr, 'dstrike')),
+            c: hex(attr(kid(pr, 'color'), 'val')), h: !!kid(pr, 'highlight') && attr(kid(pr, 'highlight'), 'val') !== 'none'
+          };
+          for (const x of c.children) {
+            if (x.localName === 't') res.push({ t: x.textContent, f });
+            else if (x.localName === 'tab') res.push({ t: '\t', f });
+            else if (x.localName === 'br' || x.localName === 'cr') res.push({ t: '\n', f: {} });
+          }
+        } else if (/^(hyperlink|smartTag|ins|sdt|sdtContent|fldSimple|customXml)$/.test(c.localName)) walk(c);
+        else if (c.localName === 'oMath' || c.localName === 'oMathPara') res.push({ t: Array.from(c.getElementsByTagNameNS('*', 't')).map(t => t.textContent).join(''), f: {} });
+      }
+    };
+    walk(p);
+    return res;
+  }
+  function fmtRuns(list) {                         // merge neighbours with the same format, then add marks
+    const key = f => [f.b, f.u, f.s, f.c, f.h].join('|'), groups = [];
+    for (const r of list) { const g = groups[groups.length - 1]; if (g && key(g.f) === key(r.f) && r.t !== '\n') g.t += r.t; else groups.push({ t: r.t, f: r.f }); }
+    return groups.map(g => {
+      if (g.t === '\n' || !g.t.trim()) return g.t;
+      const lead = g.t.match(/^\s*/)[0], trail = g.t.match(/\s*$/)[0]; let t = g.t.trim();
+      if (g.f.c) t = '{' + g.f.c + '|' + t + '}';
+      if (g.f.h) t = '==' + t + '==';
+      if (g.f.u) t = '++' + t + '++';
+      if (g.f.s) t = '~~' + t + '~~';
+      if (g.f.b) t = '**' + t + '**';
+      return lead + t + trail;
+    }).join('');
+  }
+  function para(p, inTable) {
+    const pr = kid(p, 'pPr'), style = attr(kid(pr, 'pStyle'), 'val'), lvl = headOf[style];
+    const list = runs(p);
+    if (inTable) return fmtRuns(list).replace(/\s*\n\s*/g, ' ');
+    const plainList = list.map(r => ({ t: r.t, f: lvl ? {} : r.f }));     // headings: no inner bold marks
+    let text = fmtRuns(plainList).replace(/\u00a0/g, ' ');
+    if (!text.trim()) { out.push(''); return; }
+    if (lvl) { out.push('', '#'.repeat(lvl) + ' ' + text.replace(/\s*\n\s*/g, ' ').trim()); return; }
+    const own = kid(pr, 'numPr'), fromStyle = style ? numFromStyle(style) : null;
+    const num = own ? { id: attr(kid(own, 'numId'), 'val'), il: attr(kid(own, 'ilvl'), 'val') } : fromStyle;
+    if ((num && num.id && num.id !== '0') || (style && listName[style])) {
+      const id = (num && num.id) || style, il = (num && num.il) || '0';
+      const f = ((fmtOf[id] || {})[il]) || listName[style] || 'bullet';
+      const indent = '  '.repeat(+il);
+      if (f === 'bullet' || f === 'none') { out.push(indent + '- ' + text.replace(/\n/g, ' ')); return; }
+      const k = id + ':' + il; counters[k] = (counters[k] || 0) + 1;
+      Object.keys(counters).forEach(c => { if (c.startsWith(id + ':') && +c.split(':')[1] > +il) delete counters[c]; });
+      out.push(indent + counters[k] + '. ' + text.replace(/\n/g, ' ')); return;
+    }
+    const center = attr(kid(pr, 'jc'), 'val') === 'center';
+    text.split('\n').forEach(line => { line = line.replace(/\s+$/, ''); if (!line.trim()) { out.push(''); return; } out.push(center ? '->' + line.trim() + '<-' : line); });
+  }
+  function table(tbl) {
+    out.push('');
+    for (const tr of kids(tbl, 'tr')) out.push(kids(tr, 'tc').map(tc => kids(tc, 'p').map(p => para(p, true)).join(' ').trim() || ' ').join('\t'));
+    out.push('');
+  }
+  const body = xml(files['word/document.xml']).getElementsByTagNameNS('*', 'body')[0];
+  const block = el => {
+    for (const c of el.children) {
+      if (c.localName === 'p') para(c, false);
+      else if (c.localName === 'tbl') table(c);
+      else if (c.localName === 'sdt') block(kid(c, 'sdtContent') || c);
+    }
+  };
+  block(body);
+  return out.join('\n').replace(/\*\*(\s*)\*\*/g, '$1').replace(/\n{3,}/g, '\n\n').trim();
+}
+Kpee.util.docxToText = docxToText;
+
+
 /* ---------------- pagination: lays real A4 pages out in the DOM, so every browser prints the same pages ---------------- */
 function paginate(cls, fs, lh, headHtml, bodyHtml) {
   const m = $('#measure');
@@ -1176,6 +1310,8 @@ function renderAll() {
    and the desk always shows its scrollbar — together that removes the "ResizeObserver loop" error. */
 let fitRaf = 0;
 function scheduleFit() { if (fitRaf) cancelAnimationFrame(fitRaf); fitRaf = requestAnimationFrame(() => { fitRaf = 0; fit(); }); }
+let deskW = 0;
+function onDeskResize(entries) { const w = Math.round(entries[0].contentRect.width); if (w === deskW) return; deskW = w; scheduleFit(); }
 function fit() {
   const desk = $('#desk'), wrap = $('#paperWrap'), paper = $('#paper');
   const pw = paper.offsetWidth; if (!pw) return;
@@ -1441,19 +1577,27 @@ function init() {
   const app = $('#app');
   app.addEventListener('dragover', e => { if (e.dataTransfer && Array.from(e.dataTransfer.types).includes('Files')) { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; app.classList.add('drop'); } });
   app.addEventListener('dragleave', e => { if (!app.contains(e.relatedTarget)) app.classList.remove('drop'); });
+  const loadText = (t, name) => { src.value = t; state.docId = null; state.title = ''; $('#title').value = ''; renderAll(); flash(name); src.focus(); };
+  const openFile = f => {
+    if (!f) return;
+    if (/\.docx$/i.test(f.name)) {
+      if (f.size > 50e6) { flash(cur.docxFail, 5000); return; }
+      f.arrayBuffer().then(docxToText).then(t => loadText(t, f.name)).catch(() => flash(cur.docxFail, 6000));
+      return;
+    }
+    if (/\.(doc|pptx?|xlsx?|pdf|pages|odt|rtf)$/i.test(f.name)) { flash(cur.dropOffice, 6000); return; }
+    if (f.size > 5e6) return;
+    const r = new FileReader();
+    r.onload = () => { let t = String(r.result || ''); if (/\.html?$/i.test(f.name)) { try { t = htmlToText(t); } catch (err) {} } loadText(t, f.name); };
+    r.readAsText(f);
+  };
   app.addEventListener('drop', e => {
     app.classList.remove('drop');
     const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]; if (!f) return;
-    e.preventDefault();
-    if (/\.(docx?|pptx?|xlsx?|pdf)$/i.test(f.name)) { flash(cur.dropOffice, 5000); return; }
-    if (f.size > 5e6) return;
-    const r = new FileReader();
-    r.onload = () => {
-      let t = String(r.result || ''); if (/\.html?$/i.test(f.name)) { try { t = htmlToText(t); } catch (err) {} }
-      src.value = t; state.docId = null; state.title = ''; $('#title').value = ''; renderAll(); flash(f.name);
-    };
-    r.readAsText(f);
+    e.preventDefault(); openFile(f);
   });
+  $('#bOpen').onclick = () => $('#fileIn').click();
+  $('#fileIn').onchange = e => { openFile(e.target.files[0]); e.target.value = ''; };
   $('#pCard').onclick = pFlip; $('#pFlip').onclick = pFlip;
   $('#pPrev').onclick = () => pMove(-1); $('#pNext').onclick = () => pMove(1); $('#pShuffle').onclick = pShuffle;
   $$('[data-close]').forEach(b => b.onclick = closeDialogs);
@@ -1482,7 +1626,7 @@ function init() {
   });
   window.addEventListener('beforeprint', renderAll);
   window.addEventListener('resize', scheduleFit);
-  if (window.ResizeObserver) new ResizeObserver(scheduleFit).observe($('#desk'));
+  if (window.ResizeObserver) new ResizeObserver(onDeskResize).observe($('#desk'));
 
   state.ready = true;
   renderAll();
@@ -1891,14 +2035,14 @@ L('ja', { tagline:"Kazuma Print Easy Efficient", about:"使い方", practice:"�
   cards:"枚", lines:"行", cardsNote:"両面印刷（長辺とじ）して、点線で切る。",
   noCards:"カードが見つかりません。「用語 — 説明」「用語とは…」「**用語**: 説明」の形で書くか、2列の表を貼ってください。",
   hint:"Ctrl+P 印刷 · Ctrl+S 保存 · Ctrl+B 太字 · Alt+1〜6 プリントの種類 · F1 使い方", fit:"全体",
-  dropOffice:"Word / Excel でファイルを開いて、文字をコピーしてここに貼り付けてください。", paperSize:"用紙",
+  dropOffice:"Kpee で開けるのは .docx・.txt・.md・.html。それ以外はファイルを開いて、文字をコピーしてここに貼り付けてください。", openFile:"ファイルを開く", docxFail:"この Word ファイルは読めませんでした。Word で開いて、文字をコピーして貼り付けてください。", paperSize:"用紙",
   cheatMath:"数式（LaTeX）。化学式は \\ce{H2O}", cheatChart:"棒・横棒・折れ線・円・散布図・地図",
   fmtMath:"数式：行の中は $x^2$、大きい式は $$ だけの行ではさむ（LaTeX）", fmtChart:"グラフを入れる", fmtMap:"地図を入れる",
   notFound:"見つからない", chartEmpty:"データがまだありません。::: の行のあいだに「A, 12」のような行を書いてください。",
   chartTemplate:"::: bar タイトル\n項目, 値\nA, 12\nB, 30\nC, 18\n:::", mapTemplate:"::: map 行ったことのある国\n日本\nスイス\nシンガポール\n:::",
   sample:"# 生物 — 細胞のつくり\n\n細胞の基本:\n- **細胞** とは、生物のからだをつくる基本単位。\n- 植物細胞と動物細胞のちがいは ==細胞壁・葉緑体・液胞== の有無。\n\n細胞のつくり:\n1. 核 — 遺伝情報（DNA）を含み、細胞のはたらきを調節する\n2. ミトコンドリア — 呼吸によってエネルギーを取り出す\n3. リボソーム — タンパク質を合成する\n4. 細胞膜 — 物質の出入りを調節する\n\n拡散:\n**拡散** とは、粒子が濃度の高いところから低いところへ広がること。\n{赤|温度が高いほど拡散は速い}。\n\n->試験のコツ: 図には必ず ++名称++ を書き込む。<-\n\n細胞小器官\tはたらき\n核\t遺伝情報をもつ\nミトコンドリア\t呼吸\n葉緑体\t光合成",
   empty:"左にノートを貼り付けてください。",
-  step1:"ノートを貼る (Ctrl+V)。Word、Googleドキュメント、Web、ExcelどこからでもOK。",
+  step1:"ノートを貼る (Ctrl+V)。Word ファイル (.docx) をここにドラッグしてもいい。",
   step2:"上で「どんなプリント？」を選ぶ。", step3:"印刷ボタン (Ctrl+P)。",
   cheatTitle:"自分で書くこともできる", cheatDef:"穴埋めとフラッシュカードになる",
   noAi:"Kpee は1ファイルのただのコード。AIもサーバーもネットも使わない。",
@@ -1914,7 +2058,7 @@ L('ja', { tagline:"Kazuma Print Easy Efficient", about:"使い方", practice:"�
   descCornell:"左にキーワード欄、右にノート、下にまとめ欄。",
   aboutHtml:'<p><b>Kpee — Kazuma Print Easy Efficient</b></p>'
     + '<p>Kpee は1つのファイル。ブラウザの中で動き、ネット不要、インストール不要。Chrome / Edge / Safari / Firefox で使える。</p>'
-    + '<p><b>使い方:</b> <kbd>Ctrl+V</kbd> 貼り付け → 上で「どんなプリント？」を選ぶ → <kbd>Ctrl+P</kbd> 印刷。（Mac は Ctrl の代わりに <kbd>⌘</kbd>）.txt ファイルをウィンドウにドラッグしても開ける。</p>'
+    + '<p><b>使い方:</b> <kbd>Ctrl+V</kbd> 貼り付け → 上で「どんなプリント？」を選ぶ → <kbd>Ctrl+P</kbd> 印刷。（Mac は Ctrl の代わりに <kbd>⌘</kbd>）Word ファイル (.docx)・.txt・.md をウィンドウにドラッグするか、「ファイルを開く」でも開ける。</p>'
     + '<p><b>編集:</b> <kbd>Ctrl+B</kbd> 太字（＝重要語）、<kbd>Ctrl+U</kbd> 下線、<kbd>Ctrl+E</kbd> 中央揃え。入力欄の上に蛍光ペンと文字色のボタン。Word・Googleドキュメントから貼った色・マーカー・下線もそのまま残る。</p>'
     + '<p><b>フラッシュカード:</b> 「用語 — 説明」の行を書くか、2列の表を貼る。両面印刷して切るか、「暗記練習」で画面で覚える。</p>'
     + '<p><b>数式:</b> 行の中なら <code>$v = \\frac{d}{t}$</code>、大きい式は <code>$$</code> だけの行で前後をはさむ。LaTeX の書き方で、化学式は <code>\\ce{2H2 + O2 -> 2H2O}</code>。</p>'

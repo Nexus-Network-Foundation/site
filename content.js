@@ -350,7 +350,7 @@ Kpee.addMode('mine', {
 The same goes for styles, colours, languages and the text on the empty page.
 `,
   files: [
-    ["kpee.html", "files/kpee.html", "The whole app. About 920 KB. Chrome, Edge, Safari, Firefox."]
+    ["kpee.html", "files/kpee.html", "The whole app. About 930 KB. Chrome, Edge, Safari, Firefox."]
   ],
   pictures: [
     ["images/kpee-main.jpg", "Kpee"],
@@ -405,6 +405,6 @@ window.POSTS = [
   { date: "2026-09-23", project: "tet", title: "Next: Tmail extras and monitoring",
     body: "Working on burn-after-read, time-lock and pinned messages for Tmail, a watchdog that restarts the seed if the height stops moving, and an outside check every fifteen minutes.\n\nAfter that, a note to Manu with how to join: `docker compose up`, the seed address, and what I found in libp2p." },
 
-  { date: "2026-09-24", project: "kpee", title: "Formulas, chemistry, graphs and maps",
-    body: "Kpee can typeset maths now. Inline is `$x^2$`, and a display equation is `$$` on a line of its own. Chemistry uses the same syntax: `\\ce{H2O}`.\n\nCharts are a block: open with `::: bar Title`, paste data rows like `A, 12` straight out of Excel, close with `:::`. The types are bar, hbar, line, pie, donut, scatter and map. A map takes `region: europe` on the first line.\n\nThis costs size. The file went from 165 KB to about 920 KB, nearly all of it KaTeX and its fonts. I bundled them instead of pulling them from a CDN, so it is still one file that needs no network." },
+  { date: "2026-09-24", project: "kpee", title: "Formulas, charts, maps and Word files",
+    body: "Kpee typesets maths and chemistry now. Inline is `$x^2$`, a display equation is `$$` on a line of its own, and chemistry is `\\ce{H2O}`.\n\nCharts are a block: open with `::: bar Title`, paste data rows like `A, 12` straight out of Excel, close with `:::`. Bar, horizontal bar, line, pie, donut and scatter, plus a world map — the map takes `region: world` on the first line.\n\nWord files work too. Drop a .docx on the page and it opens, no converting first. There is an Open file button as well, for when dragging is awkward.\n\nThree bugs went with it. The preview threw a ResizeObserver error. A numbered list written directly after a bullet list got swallowed into the bullets. The paper drifted out of position when you zoomed in.\n\nThe file went from 165 KB to about 930 KB, nearly all of it KaTeX and its fonts. It still runs offline and there is no AI in it." }
 ];
