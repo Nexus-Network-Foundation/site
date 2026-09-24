@@ -6,6 +6,13 @@
   <description>What I&apos;m building, written down as I go.</description>
   <language>en</language>
   <item>
+    <title>Kpee: Formulas, chemistry, graphs and maps</title>
+    <link>https://stevenexus.org/#/p/kpee/log</link>
+    <guid isPermaLink="false">kpee-2026-09-24-13</guid>
+    <pubDate>Thu, 24 Sep 2026 12:00:00 GMT</pubDate>
+    <description>&lt;p&gt;Kpee can typeset maths now. Inline is $x^2$, and a display equation is $$ on a line of its own. Chemistry uses the same syntax: \ce{H2O}.&lt;/p&gt;&lt;p&gt;Charts are a block: open with ::: bar Title, paste data rows like A, 12 straight out of Excel, close with :::. The types are bar, hbar, line, pie, donut, scatter and map. A map takes region: europe on the first line.&lt;/p&gt;&lt;p&gt;This costs size. The file went from 165 KB to about 920 KB, nearly all of it KaTeX and its fonts. I bundled them instead of pulling them from a CDN, so it is still one file that needs no network.&lt;/p&gt;</description>
+  </item>
+  <item>
     <title>TET: Next: Tmail extras and monitoring</title>
     <link>https://stevenexus.org/#/p/tet/log</link>
     <guid isPermaLink="false">tet-2026-09-23-12</guid>
