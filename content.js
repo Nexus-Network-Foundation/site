@@ -85,6 +85,8 @@ tet: {
   started: "2026-04",
   links: [["GitHub org", "https://github.com/TET-Network-Foundation"]],
   overview: `
+> your keys, your data, your device — tet only proves, never stores.
+
 TET is a Layer 1 blockchain I'm writing from scratch in Rust, on libp2p.
 
 The reason it exists: most blockchains sign transactions with Ed25519 or ECDSA. A large enough quantum computer breaks both. TET signs every transaction twice, with Ed25519 and with ML-DSA-44 (the NIST post-quantum standard, FIPS 204), so it stays safe if one of them falls.
@@ -116,9 +118,28 @@ It's a testnet. Honest list:
 - Nine of seventeen places that write to the ledger outside consensus are still open. Eight are closed.
 - The ZK prover image needs rebuilding.
 
-## Where it's going
+## Future vision
 
-The whitepaper also describes an AI inference market (pay nodes to run models), a ZK court for disputes (RISC Zero / SP1), and a way to reuse idle GPU miners for inference when mining isn't paying. Those are research, not code yet.
+That line is the rule I'm building toward.
+
+Most apps keep your messages, files and payment history on their servers, and you trust them to behave. TET turns that around. Your data stays on your device, encrypted with keys only you hold. The chain doesn't keep your data. It keeps proofs: that a payment happened, that a message was signed by you, that a file arrived intact, that a computation was done correctly. Anyone can check a proof. Nobody needs your data to do it.
+
+What that looks like when it's done:
+
+- **One key for everything.** Money, messages, files and sign-ins under one keypair you own. If you stop trusting an app, you leave with all of it.
+- **Safe after quantum computers.** Post-quantum signatures from day one, and the key exchange moved to the final ML-KEM standard, so nothing signed today can be forged later.
+- **Runs on normal machines.** Consensus that adapts to the hardware, so a laptop can take part, not only data centres.
+- **Computation you can check.** Pay other nodes to run AI models and get back a proof that they ran what you asked (RISC Zero / SP1). Disputes are settled by those proofs, not by trust. Idle GPU miners could do this work when mining doesn't pay.
+
+## Where TET falls short of that today
+
+It doesn't fully live up to the line yet. Tmail keeps the last few messages on nodes so a wallet that was offline can catch up; that has to become encrypted and on-device only. The chain stores balances and signed transactions, which any ledger has to. The proofs and the AI market are research, not code. The testnet is where I close these gaps one at a time, and the log records each one.
+
+## Roadmap
+
+- **Now (testnet):** coins, Tmail and files working between countries; security clean-up.
+- **Next:** remove wall-clock reads from consensus, close the remaining direct ledger writes, move to ML-KEM, open the repository, ten nodes run by other people.
+- **After:** proofs instead of stored data for messages and files, the AI inference market, and mainnet only when all of the above holds.
 
 ## Who it's for
 
