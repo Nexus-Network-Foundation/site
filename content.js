@@ -350,7 +350,7 @@ Kpee.addMode('mine', {
 The same goes for styles, colours, languages and the text on the empty page.
 `,
   files: [
-    ["kpee.html", "files/kpee.html", "The whole app. About 165 KB. Chrome, Edge, Safari, Firefox."]
+    ["kpee.html", "files/kpee.html", "The whole app. About 920 KB. Chrome, Edge, Safari, Firefox."]
   ],
   pictures: [
     ["images/kpee-main.jpg", "Kpee"],
@@ -403,5 +403,8 @@ window.POSTS = [
     body: "I wrote the idea on paper this morning and it works tonight.\n\nPaste notes, pick study sheet, blanks, fold & test, flashcards or original, print. One HTML file. Offline. No AI. A USER ZONE at the bottom lets anyone add their own modes, colours or languages.\n\nIt does its own page layout so page numbers come out the same in every browser, A4 or Letter. Flashcards print mirrored on the back so they line up when you cut them.\n\n[Download it](files/kpee.html).\n\n![Printed blanks](images/kpee-print.jpg)" },
 
   { date: "2026-09-23", project: "tet", title: "Next: Tmail extras and monitoring",
-    body: "Working on burn-after-read, time-lock and pinned messages for Tmail, a watchdog that restarts the seed if the height stops moving, and an outside check every fifteen minutes.\n\nAfter that, a note to Manu with how to join: `docker compose up`, the seed address, and what I found in libp2p." }
+    body: "Working on burn-after-read, time-lock and pinned messages for Tmail, a watchdog that restarts the seed if the height stops moving, and an outside check every fifteen minutes.\n\nAfter that, a note to Manu with how to join: `docker compose up`, the seed address, and what I found in libp2p." },
+
+  { date: "2026-09-24", project: "kpee", title: "Formulas, chemistry, graphs and maps",
+    body: "Kpee can typeset maths now. Inline is `$x^2$`, and a display equation is `$$` on a line of its own. Chemistry uses the same syntax: `\\ce{H2O}`.\n\nCharts are a block: open with `::: bar Title`, paste data rows like `A, 12` straight out of Excel, close with `:::`. The types are bar, hbar, line, pie, donut, scatter and map. A map takes `region: europe` on the first line.\n\nThis costs size. The file went from 165 KB to about 920 KB, nearly all of it KaTeX and its fonts. I bundled them instead of pulling them from a CDN, so it is still one file that needs no network." },
 ];
