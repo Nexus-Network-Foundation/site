@@ -84,7 +84,7 @@ tet: {
   line: "A post-quantum blockchain in Rust, and a small desktop that runs on it.",
   status: "Testnet",
   started: "2026-04",
-  links: [["GitHub org", "https://github.com/TET-Network-Foundation"]],
+  links: [["Code", "https://github.com/TET-Network-Foundation/TET-OS"], ["GitHub org", "https://github.com/TET-Network-Foundation"]],
   overview: `
 > your keys, your data, your device — tet only proves, never stores.
 
@@ -107,7 +107,7 @@ The idea is something you open every day, not a wallet you open once a month.
 It's a testnet. Honest list:
 
 **Works**
-- Nodes find each other over libp2p and agree block for block. A seed runs in Helsinki; a second node in Switzerland matches its state root at every height.
+- Nodes find each other over libp2p and agree block for block. Seeds run in Helsinki and Nuremberg. Helsinki makes the blocks; Nuremberg follows it and serves.
 - Signed transfers go through the mempool and consensus, from any node.
 - Faucet: a new wallet can claim 1000 test TET once.
 - Tmail end to end, and file transfer with on-chain fees (5.2 MB, Switzerland to Helsinki, 7.2 s).
@@ -139,7 +139,7 @@ It doesn't fully live up to the line yet. Tmail keeps the last few messages on n
 ## Roadmap
 
 - **Now (testnet):** coins, Tmail and files working between countries; security clean-up.
-- **Next:** remove wall-clock reads from consensus, close the remaining direct ledger writes, move to ML-KEM, open the repository, ten nodes run by other people.
+- **Next:** remove wall-clock reads from consensus, close the remaining direct ledger writes, move to ML-KEM, ten nodes run by other people.
 - **After:** proofs instead of stored data for messages and files, the AI inference market, and mainnet only when all of the above holds.
 
 ## Who it's for
@@ -147,7 +147,7 @@ It doesn't fully live up to the line yet. Tmail keeps the last few messages on n
 Right now: developers who want to run a node, break it and tell me. Later: anyone who wants messages and payments that don't depend on a company or on today's cryptography lasting forever.
 `,
   use: `
-The repository is private while I clean it up. [Write to me](#/contact) for access; I say yes to people who want to run a node.
+The repository is public: [github.com/TET-Network-Foundation/TET-OS](https://github.com/TET-Network-Foundation/TET-OS).
 
 ## Run a node
 
@@ -165,10 +165,11 @@ Check that it's syncing. The height should go up every few seconds.
 curl -s 127.0.0.1:5010/ledger/state
 \`\`\`
 
-The public seed node, if you need to set it by hand:
+The public seed nodes, if you need to set them by hand:
 
 \`\`\`
 /ip4/95.217.158.153/tcp/8002/p2p/12D3KooWNcdESJUC1uhuhrMn5anmsGEBhYgCkE8pCbXf8cD7MSEC
+/ip4/46.224.223.54/tcp/8002/p2p/12D3KooWSam648Et2FXCUrqUBM6AEoZR5GAwDnoMG77JnA3ajonM
 \`\`\`
 
 ## Get test coins
@@ -219,7 +220,7 @@ One file, \`fees.rs\`. There used to be seven different fee schedules in differe
 **Routes anyone could call.** A clean-up found five kinds of unauthenticated routes, including one that could replace the whole ledger and seven DEX routes that could move other people's funds. All removed.
 `,
   files: [
-    ["Whitepaper", "", "Genesis draft v1.0, April 2026. Ask me for a copy while the repo is private."]
+    ["Whitepaper", "https://github.com/TET-Network-Foundation/TET-OS/blob/main/WHITEPAPER.md", "Genesis draft v1.0, April 2026."]
   ],
   pictures: [
     ["images/tet-desktop.jpg", "The desktop, Windows 95 style"],
@@ -473,5 +474,7 @@ window.POSTS = [
   { date: "2026-09-24", project: "kpee", title: "Formulas, charts, maps and Word files",
     body: "Kpee typesets maths and chemistry now. Inline is `$x^2$`, a display equation is `$$` on a line of its own, and chemistry is `\\ce{H2O}`.\n\nCharts are a block: open with `::: bar Title`, paste data rows like `A, 12` straight out of Excel, close with `:::`. Bar, horizontal bar, line, pie, donut and scatter, plus a world map — the map takes `region: world` on the first line.\n\nWord files work too. Drop a .docx on the page and it opens, no converting first. There is an Open file button as well, for when dragging is awkward.\n\nThree bugs went with it. The preview threw a ResizeObserver error. A numbered list written directly after a bullet list got swallowed into the bullets. The paper drifted out of position when you zoomed in.\n\nThe file went from 165 KB to about 930 KB, nearly all of it KaTeX and its fonts. It still runs offline and there is no AI in it." },
   { date: "2026-09-26", project: "tet", title: "Anonymous messages between two countries",
-    body: "Tmail can send a message without showing who sent it. The sender proves they are one of the registered users without saying which one. A zero-knowledge proof does that, and it uses only hashes, so nothing inside it is the kind of maths a quantum computer breaks.\n\nMy first design was wrong. It proved \"I know a seed that derives this key\", took 11 to 19 minutes per proof, and proved nothing useful, because anyone can invent a seed. I deleted it. The replacement proves membership in a Merkle tree with SHA-256 only, which the zkVM has hardware support for, and takes about 60 seconds.\n\nThe proof receipt is 257 KB and the gossip limit is 128 KB. So the message carries a 7 KB announcement and the receiver pulls the receipt separately.\n\nThen the test between countries failed. Helsinki had two registrations, my node in Switzerland had one, so the two computed different roots and a perfectly valid message was rejected. It was not a bug in the proof. Gossip only delivers to whoever is listening at that moment and nothing fills in the past, so any node that was offline for any registration stays wrong forever. I wrote that down as a red result. Registering the same wallet on both machines would have turned the test green and left the network broken.\n\nThe fix is a pull, not a push. Two nodes compare registry roots when they connect and every five minutes after that, and only transfer anything when the roots differ. Every registration that arrives this way goes through the same signature check as a fresh one, so a peer cannot invent one. It can refuse to send me registrations, and then I stay partial and reject proofs I cannot check, which is the safe direction.\n\nRerun with a fresh node that was never present for the registration: it pulled the registration 1.2 seconds after starting, took it into its tree at the next epoch 55.7 seconds later, and then matched Helsinki\u2019s root exactly. It can now serve a proof path for a wallet it never saw register.\n\nVerifying one registration takes 2.39 ms, so a full 50,000-member registry is about two minutes of signature checking. That is too long to hand to one peer, so a sync round stops after 30 seconds, says in the log that it stopped, and carries on from the same place next time.\n\nBurn-after-read and time-lock work too. Pinned messages, and the 1 TET deposit that would make anonymous sending cost something, are not built. Both sit in the test list as red so nobody can mistake them for done.\n\n253 tests. Three of the new ones I checked by putting the bug back and confirming they fail \u2014 including one where the first check I wrote would have passed for the wrong reason." }
+    body: "Tmail can send a message without showing who sent it. The sender proves they are one of the registered users without saying which one. A zero-knowledge proof does that, and it uses only hashes, so nothing inside it is the kind of maths a quantum computer breaks.\n\nMy first design was wrong. It proved \"I know a seed that derives this key\", took 11 to 19 minutes per proof, and proved nothing useful, because anyone can invent a seed. I deleted it. The replacement proves membership in a Merkle tree with SHA-256 only, which the zkVM has hardware support for, and takes about 60 seconds.\n\nThe proof receipt is 257 KB and the gossip limit is 128 KB. So the message carries a 7 KB announcement and the receiver pulls the receipt separately.\n\nThen the test between countries failed. Helsinki had two registrations, my node in Switzerland had one, so the two computed different roots and a perfectly valid message was rejected. It was not a bug in the proof. Gossip only delivers to whoever is listening at that moment and nothing fills in the past, so any node that was offline for any registration stays wrong forever. I wrote that down as a red result. Registering the same wallet on both machines would have turned the test green and left the network broken.\n\nThe fix is a pull, not a push. Two nodes compare registry roots when they connect and every five minutes after that, and only transfer anything when the roots differ. Every registration that arrives this way goes through the same signature check as a fresh one, so a peer cannot invent one. It can refuse to send me registrations, and then I stay partial and reject proofs I cannot check, which is the safe direction.\n\nRerun with a fresh node that was never present for the registration: it pulled the registration 1.2 seconds after starting, took it into its tree at the next epoch 55.7 seconds later, and then matched Helsinki\u2019s root exactly. It can now serve a proof path for a wallet it never saw register.\n\nVerifying one registration takes 2.39 ms, so a full 50,000-member registry is about two minutes of signature checking. That is too long to hand to one peer, so a sync round stops after 30 seconds, says in the log that it stopped, and carries on from the same place next time.\n\nBurn-after-read and time-lock work too. Pinned messages, and the 1 TET deposit that would make anonymous sending cost something, are not built. Both sit in the test list as red so nobody can mistake them for done.\n\n253 tests. Three of the new ones I checked by putting the bug back and confirming they fail \u2014 including one where the first check I wrote would have passed for the wrong reason." },
+  { date: "2026-10-01", project: "tet", title: "The code is public now",
+    body: "TET-OS is open. https://github.com/TET-Network-Foundation/TET-OS\n\nWhat works, between two countries: coins, encrypted mail, file sharing, scheduled release, burn-after-read, and anonymous sending with a zero-knowledge proof that uses only hashes.\n\nWhat doesn't: pinned messages, and the deposit that would make anonymous sending cost something. Both need a change I can only make when I cut a new genesis, which I'm targeting for the first quarter of next year. Their tests are marked #[ignore] on purpose and stay red until the Phase 1 genesis (AT-5(b), AT-7(b)) so nobody can mistake them for done.\n\nIt is not audited. There are two seed nodes now, in Helsinki and Nuremberg, and both were at block 66,653 when I wrote this. Only Helsinki makes blocks, though, so one machine can still stop the network. The anonymity set is everyone my node has seen register, which today is a handful of people. All of that is written down in SECURITY.md rather than left for someone to discover.\n\nThe last two weeks were mostly finding out what I had not tested. I wrote a table of every behaviour against every condition that had caused a bug that month, then read the tests instead of trusting their names. It said nothing restarted a node. So I wrote that test, and it found that a transaction someone sent could disappear if the node restarted before it was mined — accepted, receipt given, gone. That is fixed.\n\nIt also said twelve of my regression tests had never been checked by putting the bug back. I checked all twelve. They all catch what they claim. One was weaker than it looked: it only failed when I removed both halves of a check, so removing one half would have passed review and passed CI. That one is stronger now.\n\nThe worst thing I found was in a file I had planned to leave alone. A crypto bundle that ships to browsers could not be rebuilt from its own source, so I went to fix that. The rebuild signed with the wrong post-quantum parameter set, and the node would have rejected every signature from every browser wallet. It had never broken anything only because the committed file was old enough to predate the mistake. The safe-looking thing — leaving it alone — was what kept the bug alive.\n\n253 tests when I started, 282 now, and a workflow that runs the zero-knowledge ones against a real prover instead of a mock. It passes." }
 ];
