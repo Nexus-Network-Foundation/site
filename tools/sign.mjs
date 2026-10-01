@@ -1,6 +1,8 @@
 // tools/sign.mjs — sign devlog entries with the agent key. Run by hand, never in CI:
 //
-//   TET_MNEMONIC=… TET_AGENT_SDK=~/Nexus_Network/tet-agent-sdk node tools/sign.mjs [--resign <id>]…
+//   TET_AGENT_SDK=…/tet-agent-sdk node tools/sign.mjs [--resign <id>]…
+//
+// The key comes from the macOS Keychain at sign time (tools/agent-key.mjs), never from a file.
 //
 // Signs every entry that has no sidecar in sigs/. It will NOT re-sign an entry whose signature has
 // stopped verifying unless that entry is named with --resign: a tool that quietly re-signs whatever
@@ -13,29 +15,21 @@
 // site would reject.
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 import { entryId, entryPayloadBytes, mldsa44KeyId, DEVLOG_PAYLOAD_TYPE, verifyEntry } from '../files/tet-verify/verify.mjs';
 import { loadPosts, loadPqc, readPin } from './devlog-sigs.mjs';
+import { loadAgent } from './agent-key.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const resign = new Set(process.argv.flatMap((a, i, all) => (all[i - 1] === '--resign' ? [a] : [])));
 
-const mnemonic = process.env.TET_MNEMONIC;
-if (!mnemonic) throw new Error('TET_MNEMONIC is not set (the agent key, not your wallet)');
-const sdkDir = process.env.TET_AGENT_SDK;
-if (!sdkDir) throw new Error('TET_AGENT_SDK is not set: path to a built tet-agent-sdk from branch agent-identity');
 const pin = readPin(root);
-if (!pin) throw new Error('files/tet-verify/pin.json is missing: pin the agent key and chain first');
-
-const sdk = p => import(pathToFileURL(path.join(sdkDir, 'dist', p)).href);
-const { loadHybridWalletFromMnemonic } = await sdk('wallet_from_mnemonic.js');
-const { signPayloadEnvelope } = await sdk('agent.js');
-
-const wallet = await loadHybridWalletFromMnemonic(mnemonic);
+if (!pin) throw new Error('files/tet-verify/pin.json is missing: run tools/pin.mjs first');
+const { wallet, signPayloadEnvelope } = await loadAgent();
 const edHex = wallet.walletIdHex64.trim().toLowerCase();
 const mlKeyId = await mldsa44KeyId(wallet.mldsa44PubkeyB64);
 if (edHex !== pin.agent_ed25519_pubkey_hex || mlKeyId !== pin.agent_mldsa44_keyid) {
-  throw new Error(`this mnemonic is not the pinned agent key (got ${edHex.slice(0, 12)}…, pinned ${pin.agent_ed25519_pubkey_hex.slice(0, 12)}…)`);
+  throw new Error(`this key is not the pinned agent key (got ${edHex.slice(0, 12)}…, pinned ${pin.agent_ed25519_pubkey_hex.slice(0, 12)}…)`);
 }
 
 const chain = { chainId: pin.chain_id, genesisHash: pin.genesis_hash };
