@@ -1,0 +1,6 @@
+{
+  "chain_id": "tet-local-dev",
+  "genesis_hash": "0x9d6ccb1354b31419ade378aef68de58e854938df795b69cf76777e3483efbb36",
+  "agent_ed25519_pubkey_hex": "7efd299c95c614225c67969073a08fe72484cb53fe671177d1c4967c1fec185e",
+  "agent_mldsa44_keyid": "tet-mldsa44:fa8c7cc56b757e2ebb4dc81bf49f2fbc34f4bf6dd726135e9b19a48e18fa4430"
+}
