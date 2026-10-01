@@ -1,6 +1,6 @@
 // tools/sign.mjs — sign devlog entries with the agent key. Run by hand, never in CI:
 //
-//   TET_AGENT_SDK=…/tet-agent-sdk node tools/sign.mjs [--resign <id>]…
+//   node tools/sign.mjs [--resign <id>]…        (finds a built tet-agent-sdk; see tools/agent-key.mjs)
 //
 // The key comes from the macOS Keychain at sign time (tools/agent-key.mjs), never from a file.
 //
