@@ -2,7 +2,7 @@ name: build
 on:
   push:
     branches: [main]
-    paths: [content.js, tools/build.mjs]
+    paths: [content.js, 'tools/**', 'sigs/**', 'files/tet-verify/**']
   schedule:
     - cron: '17 6 * * *'        # once a day, for stats.json
   workflow_dispatch:
@@ -14,7 +14,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: 20 }
+        with: { node-version: 22 }   # Ed25519 in WebCrypto without a flag
+      - run: node tools/test-sigs.mjs
       - run: node tools/build.mjs
         env:
           TET_SEED: ${{ vars.TET_SEED }}

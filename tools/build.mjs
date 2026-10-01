@@ -1,17 +1,29 @@
 // tools/build.mjs — run by the GitHub Action (or by hand: node tools/build.mjs).
 // Writes feed.xml (RSS) and stats.json, and keeps the share-card tags in index.html
 // pointing at SITE.url. Reads everything from content.js. No npm packages needed.
+// First, checks every devlog entry against its signature in sigs/ and stops if any fails.
 import fs from 'node:fs';
 import net from 'node:net';
 import vm from 'node:vm';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { checkAll } from './devlog-sigs.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ctx = { window: {} };
 vm.runInNewContext(fs.readFileSync(path.join(root, 'content.js'), 'utf8'), ctx);
 const { SITE, PROJECTS, POSTS = [] } = ctx.window;
 const base = (SITE.url || '').replace(/\/$/, '');
+
+// ---------- signatures ----------
+// Before anything is written: a failed check must not leave a feed built from an entry that fails it.
+const sigs = await checkAll(root, POSTS);
+if (!sigs.pinned) console.log('signatures: not set up (no files/tet-verify/pin.json), nothing checked');
+else if (sigs.problems.length) {
+  console.error(`signatures: ${sigs.problems.length} problem(s) in ${sigs.checked} entries\n  ` + sigs.problems.join('\n  '));
+  process.exit(1);
+} else console.log(`signatures: all ${sigs.checked} entries verify`);
+
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' }[c]));
 
 // ---------- feed.xml ----------
