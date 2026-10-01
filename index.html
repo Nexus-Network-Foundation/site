@@ -58,6 +58,12 @@ table{border-collapse:collapse;width:100%}
 .post .head b{font-size:14px}
 .post .head span{color:#666;font-size:11px;white-space:nowrap}
 .post.them .who{background:#f7f3ea}
+.sig-note{margin:0 0 8px}
+.sig-limit,.sig-result{border:1px solid #d6d9de;background:#f7f8fa;padding:8px 10px;margin:0 0 8px;font-size:12px;line-height:1.5}
+.sig-result{margin:10px 0 0}
+.sig-result.good{border-color:#9cc59c;background:#f1f8f1}
+.sig-result.bad{border-color:#d9a3a3;background:#fbf1f1}
+.post .head .sig-link{margin-left:6px}
 .text p{margin:0 0 .9em}
 .text h2{font-size:15px;margin:1.3em 0 .5em;padding-bottom:3px;border-bottom:1px solid #d6d9de}
 .text h3{font-size:13px;margin:1.1em 0 .4em}
@@ -137,6 +143,7 @@ var S = window.SITE, P = window.PROJECTS, POSTS = window.POSTS || [], ABOUT = wi
 var MAIL = window.MAIL || {}, MAIL_ON = !!(MAIL.url && MAIL.anonKey);
 var ORDER = Object.keys(P);
 var $ = function (s) { return document.querySelector(s); };
+var SIG_LIMIT = 'A pass means one thing: the agent key pinned on this site signed exactly these bytes, and nothing has changed since. It does not say who or what wrote the words. The key sits on the same laptop as the agent and as me, so a signature cannot tell a model\u2019s text from mine. It does not protect against anyone who can change this site, because the pinned key is served from this site too. It catches an entry edited after it was signed.';
 function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
 var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 function fmtDate(d) { var m = /^(\d{4})-(\d{2})(?:-(\d{2}))?/.exec(d || ''); if (!m) return esc(d); return (m[3] ? MONTHS[+m[2]-1] + ' ' + (+m[3]) + ', ' : MONTHS[+m[2]-1] + ' ') + m[1]; }
@@ -243,7 +250,9 @@ function pageProject(id, tab) {
   var body;
   if (tab === 'log') {
     body = '<p class="muted" style="margin:0 0 8px">' + list.length + ' posts, oldest first. Started ' + fmtDate(pr.started) + '.</p>'
-      + list.map(function (p, i) { return postBox(Object.assign(me('Post ' + (i + 1)), { title: p.title, when: '&laquo; on: ' + fmtDate(p.date) + ' &raquo;', html: md(p.body) })); }).join('');
+      + '<p class="muted sig-note">Each post is signed by my agent key. <a href="#" data-sig-about>What that proves, and what it doesn\u2019t</a>.</p>'
+      + '<div class="sig-limit" hidden>' + esc(SIG_LIMIT) + '</div>'
+      + list.map(function (p, i) { return postBox(Object.assign(me('Post ' + (i + 1)), { title: p.title, when: '&laquo; on: ' + fmtDate(p.date) + ' &raquo; <a href="#" class="sig-link" data-verify="' + POSTS.indexOf(p) + '">verify</a>', html: md(p.body) + '<div class="sig-result" hidden></div>' })); }).join('');
   } else if (tab === 'files') {
     var files = (pr.files || []).map(function (f) {
       return '<tr><td style="width:180px"><b>' + (f[1] ? '<a href="' + esc(f[1]) + '" download>' + esc(f[0]) + '</a>' : esc(f[0])) + '</b></td><td>' + esc(f[2] || '') + '</td></tr>';
@@ -428,6 +437,23 @@ function render() {
 }
 $('#foot').innerHTML = 'Updated after each work session. <a href="#/contact">Write to me</a> &middot; <a href="feed.xml">RSS</a>';
 window.addEventListener('hashchange', render);
+$('#main').addEventListener('click', function (ev) {
+  var about = ev.target.closest('[data-sig-about]');
+  if (about) { ev.preventDefault(); var box = $('#main').querySelector('.sig-limit'); box.hidden = !box.hidden; return; }
+  var a = ev.target.closest('[data-verify]');
+  if (!a) return;
+  ev.preventDefault();
+  var out = a.closest('.msg').querySelector('.sig-result');
+  out.hidden = false; out.className = 'sig-result'; out.textContent = 'Checking\u2026 (loading the verifier, about 280 KB)';
+  import('./files/tet-verify/verify.mjs').then(function (v) { return v.verifyInBrowser(POSTS[+a.dataset.verify]); }).then(function (r) {
+    var key = r.pin ? ' Key ' + r.pin.agent_ed25519_pubkey_hex.slice(0, 16) + '\u2026 (Ed25519) and ' + r.pin.agent_mldsa44_keyid.slice(12, 28) + '\u2026 (ML-DSA-44), chain ' + r.pin.chain_id + '.' : '';
+    out.className = 'sig-result ' + (r.ok ? 'good' : 'bad');
+    out.innerHTML = '<b>' + (r.ok ? 'Signature verifies.' : 'Does not verify: ' + esc(r.reason) + '.') + '</b>' + esc(key) + '<br>' + esc(SIG_LIMIT);
+  }).catch(function (e) {
+    out.className = 'sig-result bad';
+    out.innerHTML = '<b>Could not check: ' + esc(e && e.message || e) + '.</b> Verifying needs a browser with Ed25519 in WebCrypto and WebAssembly.<br>' + esc(SIG_LIMIT);
+  });
+});
 document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { var z = $('#zoom'); if (z) z.remove(); } });
 render();
 })();
