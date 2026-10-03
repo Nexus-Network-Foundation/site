@@ -138,7 +138,7 @@ It doesn't fully live up to the line yet. Tmail keeps the last few messages on n
 
 ## Roadmap
 
-- **Now (testnet):** coins, Tmail and files working between countries; security clean-up.
+- **Now (testnet):** coins, Tmail and files working between countries; security clean-up. Done: the repository is public, at [github.com/TET-Network-Foundation/TET-OS](https://github.com/TET-Network-Foundation/TET-OS).
 - **Next:** remove wall-clock reads from consensus, close the remaining direct ledger writes, move to ML-KEM, ten nodes run by other people.
 - **After:** proofs instead of stored data for messages and files, the AI inference market, and mainnet only when all of the above holds.
 
