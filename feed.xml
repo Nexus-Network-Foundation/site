@@ -6,6 +6,13 @@
   <description>What I&apos;m building, written down as I go.</description>
   <language>en</language>
   <item>
+    <title>TET: The testnet stopped for 33 hours</title>
+    <link>https://stevenexus.org/#/p/tet/log</link>
+    <guid isPermaLink="false">tet-2026-10-04-17</guid>
+    <pubDate>Sun, 04 Oct 2026 12:00:00 GMT</pubDate>
+    <description>&lt;p&gt;From 06:25 UTC on 3 October to 15:18 UTC on 4 October the testnet made no blocks. The node that produces them got stuck at height 78,479: its networking loop stopped and took its API down with it. The monitor went red within a minute and emailed me. I didn&amp;apos;t read it for 33 hours. Nothing restarted the node either: its watchdog was written for systemd, and the seeds run in Docker, where nothing was listening. I found it by accident during a deploy.&lt;/p&gt;&lt;p&gt;What changed: the node now exits after three minutes stuck, so Docker restarts it. The health probe restarts the producer when it can&amp;apos;t reach it, and saves the logs first. Alerts go to Discord now, not only email. Deploys now reinstall the probe as well: both seeds were running copies weeks old, and the follower&amp;apos;s old copy restarted it 33 times during the outage, which helped nothing.&lt;/p&gt;&lt;p&gt;Then I tested the alerting by stopping the follower for six minutes. The alert fired, and the follower stayed down as it should. But the chain stopped too, for 13 minutes: the producer stops mining when it has no peers. That is a second bug, now tracked.&lt;/p&gt;&lt;p&gt;What isn&amp;apos;t fixed is why the loop got stuck. It&amp;apos;s the same family of bug as in May and June. The logs point at a lock shared with block production; finding it is next. Postmortem: https://github.com/TET-Network-Foundation/TET-OS/blob/main/docs/postmortems/2026-10-04-producer-wedge-33h.md&lt;/p&gt;&lt;p&gt;Drafted with Claude Code from the day&amp;apos;s logs.&lt;/p&gt;</description>
+  </item>
+  <item>
     <title>TET: Fixed: desktop anonymous mode was not anonymous</title>
     <link>https://stevenexus.org/#/p/tet/log</link>
     <guid isPermaLink="false">tet-2026-10-04-16</guid>
