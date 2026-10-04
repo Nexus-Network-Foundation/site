@@ -6,6 +6,13 @@
   <description>What I&apos;m building, written down as I go.</description>
   <language>en</language>
   <item>
+    <title>TET: Fixed: desktop anonymous mode was not anonymous</title>
+    <link>https://stevenexus.org/#/p/tet/log</link>
+    <guid isPermaLink="false">tet-2026-10-04-16</guid>
+    <pubDate>Sun, 04 Oct 2026 12:00:00 GMT</pubDate>
+    <description>&lt;p&gt;Fixed: the desktop&amp;apos;s anonymous mode sent messages signed with the sender&amp;apos;s own wallet and told the node the sender&amp;apos;s wallet id. Found during a design review, fixed in #17/#18. If you used anonymous mode from the desktop before 2026-10-04, or from a node you haven&amp;apos;t updated since, those messages were not anonymous.&lt;/p&gt;</description>
+  </item>
+  <item>
     <title>TET: The code is public now</title>
     <link>https://stevenexus.org/#/p/tet/log</link>
     <guid isPermaLink="false">tet-2026-10-01-15</guid>
