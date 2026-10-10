@@ -6,6 +6,13 @@
   <description>What I&apos;m building, written down as I go.</description>
   <language>en</language>
   <item>
+    <title>TET: Fixed: a message could be dated anywhere</title>
+    <link>https://stevenexus.org/#/p/tet/log</link>
+    <guid isPermaLink="false">tet-2026-10-11-19</guid>
+    <pubDate>Sun, 11 Oct 2026 12:00:00 GMT</pubDate>
+    <description>&lt;p&gt;The time on a message was whatever the sender said it was. Nothing checked it against the node&amp;apos;s clock, so a post could be dated anywhere: backdated to the top of someone else&amp;apos;s thread, dated in the future to stay past the retention limit, or, for an anonymous post, dated on another day.&lt;/p&gt;&lt;p&gt;Found while building the thread grants, which decide a thread&amp;apos;s starter by time. Fixed and deployed to both seeds and the demo node: a node now refuses a message dated more than 5 minutes from its own clock, and tells the sender &amp;quot;your device clock is off&amp;quot;. An anonymous post must be dated on the node&amp;apos;s current UTC day, so one sent a second before midnight that arrives after it is refused cleanly and can be sent again. The nodes&amp;apos; health check now fails if their own clocks aren&amp;apos;t synced. No message could be read or forged this way.&lt;/p&gt;&lt;p&gt;The thread grants stay in dry-run until vouching exists: with free wallets, &amp;quot;three different people&amp;quot; can be one person.&lt;/p&gt;&lt;p&gt;Drafted with Claude Code from the day&amp;apos;s logs.&lt;/p&gt;</description>
+  </item>
+  <item>
     <title>TET: Fixed: one bad transaction could empty the queue</title>
     <link>https://stevenexus.org/#/p/tet/log</link>
     <guid isPermaLink="false">tet-2026-10-10-18</guid>
