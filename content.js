@@ -2,7 +2,7 @@
 //
 // To add a log post: copy the last entry in POSTS, paste it at the bottom, change it, save, push.
 // Pictures go in images/ and are written as  ![caption](images/name.jpg)  inside any text.
-// A picture that isn't uploaded yet is simply not shown, so you can write the line first.
+// A picture that isn't uploaded yet is simply not shown, so you can write the line before the picture exists.
 // Text rules: blank line = new paragraph, ## heading, - list, `code`, **bold**, [link](https://...),
 // and a code box is three backticks on their own line before and after.
 //
@@ -29,13 +29,13 @@ window.NOW = {
   updated: "2026-09-26",
   doing: [
     ["tet", "Tmail: burn-after-read and time-lock are done. Pinned messages need a fee transaction the block applier does not handle yet."],
-    ["tet", "Anonymous sending works between countries. Making it cost something needs a deposit, which waits for Phase 1."],
+    ["tet", "Sending a message without showing which member sent it works between countries. Limiting how much one person can send that way waits for Phase 1."],
     ["tet", "A watchdog on the Helsinki seed, and an outside check every fifteen minutes."],
-    ["kpee", "Getting Kpee in front of the first students and teachers."]
+    ["kpee", "Getting Kpee in front of students and teachers."]
   ],
   help: [
     ["tet", "Run a node for a week and tell me where it broke.", "#/p/tet/use"],
-    ["unfog", "Use Unfog for a day and tell me what felt wrong in the first minute.", "https://unfog.tech"],
+    ["unfog", "Use Unfog for a day and tell me what felt wrong in the opening minute.", "https://unfog.tech"],
     ["kpee", "Print one sheet from your own notes and tell me which blank it got wrong.", "files/kpee.html"]
   ]
 };
@@ -53,7 +53,7 @@ I build software after class and on weekends. Mostly Rust for TET, TypeScript fo
 
 ## What I'm working on
 
-**TET** is the big one. A blockchain that should still be safe once quantum computers can break today's signatures, with a small desktop on top where you send money, send messages and send files, all with one key. I started it in April after two earlier tries on Substrate and Solana that I threw away.
+**TET** is the big one. A blockchain built to hold up once quantum computers can break today's signatures (that protection isn't complete yet), with a small desktop on top for transfers, messages and files. I started it in April after two earlier tries on Substrate and Solana that I threw away.
 
 **Unfog** is a map of where you have actually been. The world starts covered in fog and it clears where you walk. I started it in June because I wanted it for myself.
 
@@ -81,22 +81,20 @@ window.PROJECTS = {
 
 tet: {
   name: "TET",
-  line: "A post-quantum blockchain in Rust, and a small desktop that runs on it.",
+  line: "A blockchain in Rust with post-quantum signatures, and a small desktop that runs on it.",
   status: "Testnet",
   started: "2026-04",
   links: [["Code", "https://github.com/TET-Network-Foundation/TET-OS"], ["GitHub org", "https://github.com/TET-Network-Foundation"]],
   overview: `
-> your keys, your data, your device — tet only proves, never stores.
-
 TET is a Layer 1 blockchain I'm writing from scratch in Rust, on libp2p.
 
-The reason it exists: most blockchains sign transactions with Ed25519 or ECDSA. A large enough quantum computer breaks both. TET signs every transaction twice, with Ed25519 and with ML-DSA-44 (the NIST post-quantum standard, FIPS 204), so it stays safe if one of them falls.
+The reason it exists: most blockchains sign transactions with Ed25519 or ECDSA. A large enough quantum computer breaks both. TET signs every transaction twice, with Ed25519 and with ML-DSA-44 (the NIST post-quantum standard, FIPS 204). The aim is that forging a transaction needs breaking both. That isn't true yet; see the list below.
 
-On top of the chain there's a desktop I call the Sovereign OS. One key, three things:
+On top of the chain there's a desktop I call the Sovereign OS. Three things:
 
-- **Send coins.** Transfers go through consensus like any chain.
-- **Tmail.** End-to-end encrypted messages between keys. X25519 + Kyber768 for the key exchange, ChaCha20 for the message, signed with Ed25519 + ML-DSA-44.
-- **Files.** Send files peer to peer over libp2p. The fee is paid in µTET and settled on chain.
+- **Transfers.** They go through consensus like any chain. Testnet TET is a practice unit and can't be exchanged for money.
+- **Tmail.** End-to-end encrypted messages between keys. X25519 + Kyber-768 (Round 3, not the final ML-KEM standard) for the key exchange, ChaCha20 for the message, signed with Ed25519 + ML-DSA-44.
+- **Files.** Send files peer to peer over libp2p. Each transfer is recorded on chain.
 
 The idea is something you open every day, not a wallet you open once a month.
 
@@ -109,11 +107,12 @@ It's a testnet. Honest list:
 **Works**
 - Nodes find each other over libp2p and agree block for block. Seeds run in Helsinki and Nuremberg. Helsinki makes the blocks; Nuremberg follows it and serves.
 - Signed transfers go through the mempool and consensus, from any node.
-- Faucet: a new wallet can claim 1000 test TET once.
-- Tmail end to end, and file transfer with on-chain fees (5.2 MB, Switzerland to Helsinki, 7.2 s).
+- Faucet: a new wallet can claim 1,000 TET (practice unit, can't be exchanged for money) once.
+- Tmail end to end, and file transfer recorded on chain (5.2 MB, Switzerland to Helsinki, 7.2 s).
 - 185 tests in CI, Docker image with the UI included.
 
 **Not done yet**
+- Quantum resistance is incomplete. Every signature is hybrid, but the wallet ID is the Ed25519 key and the ML-DSA key isn't bound to it until \`wallet_id_v2\` (Phase 1).
 - The key exchange uses Kyber round 3, not the final ML-KEM (FIPS 203). The two aren't byte-compatible. The whitepaper says round 3 until I migrate.
 - Some code still reads the wall clock inside consensus, which can make nodes disagree. Being removed.
 - Nine of seventeen places that write to the ledger outside consensus are still open. Eight are closed.
@@ -121,30 +120,23 @@ It's a testnet. Honest list:
 
 ## Future vision
 
-That line is the rule I'm building toward.
+What I'm building toward, and how far it is today:
 
-Most apps keep your messages, files and payment history on their servers, and you trust them to behave. TET turns that around. Your data stays on your device, encrypted with keys only you hold. The chain doesn't keep your data. It keeps proofs: that a payment happened, that a message was signed by you, that a file arrived intact, that a computation was done correctly. Anyone can check a proof. Nobody needs your data to do it.
+- **Your data on your device.** Messages and files encrypted with keys only you hold. Today Tmail still keeps the last few messages on nodes so a wallet that was offline can catch up; that has to become on-device only.
+- **Holds up against quantum computers.** Every transaction already carries a post-quantum signature. Binding that key to the wallet ID (\`wallet_id_v2\`) comes with Phase 1, and the key exchange is Kyber round 3, not the final ML-KEM standard.
+- **Runs on normal machines.** Consensus that adapts to the hardware, so a laptop can take part, not only data centres. This is a goal, not code yet.
 
-What that looks like when it's done:
-
-- **One key for everything.** Money, messages, files and sign-ins under one keypair you own. If you stop trusting an app, you leave with all of it.
-- **Safe after quantum computers.** Post-quantum signatures from day one, and the key exchange moved to the final ML-KEM standard, so nothing signed today can be forged later.
-- **Runs on normal machines.** Consensus that adapts to the hardware, so a laptop can take part, not only data centres.
-- **Computation you can check.** Pay other nodes to run AI models and get back a proof that they ran what you asked (RISC Zero / SP1). Disputes are settled by those proofs, not by trust. Idle GPU miners could do this work when mining doesn't pay.
-
-## Where TET falls short of that today
-
-It doesn't fully live up to the line yet. Tmail keeps the last few messages on nodes so a wallet that was offline can catch up; that has to become encrypted and on-device only. The chain stores balances and signed transactions, which any ledger has to. The proofs and the AI market are research, not code. The testnet is where I close these gaps one at a time, and the log records each one.
+The testnet is where I close these gaps one at a time, and the log records each one.
 
 ## Roadmap
 
-- **Now (testnet):** coins, Tmail and files working between countries; security clean-up. Done: the repository is public, at [github.com/TET-Network-Foundation/TET-OS](https://github.com/TET-Network-Foundation/TET-OS).
-- **Next:** remove wall-clock reads from consensus, close the remaining direct ledger writes, move to ML-KEM, ten nodes run by other people.
-- **After:** proofs instead of stored data for messages and files, the AI inference market, and mainnet only when all of the above holds.
+- **Now (testnet):** transfers, Tmail and files working between countries; security clean-up. Done: the repository is public, at [github.com/TET-Network-Foundation/TET-OS](https://github.com/TET-Network-Foundation/TET-OS).
+- **Next:** remove wall-clock reads from consensus, close the remaining direct ledger writes, ten nodes run by other people.
+- **After:** mainnet, only when all of the above holds.
 
 ## Who it's for
 
-Right now: developers who want to run a node, break it and tell me. Later: anyone who wants messages and payments that don't depend on a company or on today's cryptography lasting forever.
+Right now: developers who want to run a node, break it and tell me. Later: anyone who wants messages and files that don't depend on a company or on today's cryptography lasting forever.
 `,
   use: `
 The repository is public: [github.com/TET-Network-Foundation/TET-OS](https://github.com/TET-Network-Foundation/TET-OS).
@@ -172,13 +164,13 @@ The public seed nodes, if you need to set them by hand:
 /ip4/46.224.223.54/tcp/8002/p2p/12D3KooWSam648Et2FXCUrqUBM6AEoZR5GAwDnoMG77JnA3ajonM
 \`\`\`
 
-## Get test coins
+## Get test TET
 
 \`\`\`
 tet-cli faucet claim --mnemonic "your twelve words"
 \`\`\`
 
-You get 1000 TET in the next block. A second claim returns \`already_claimed\` and pays nothing. If you get a 401, your \`TET_CHAIN_ID\` doesn't match the network.
+You get 1,000 TET (practice unit, can't be exchanged for money) in the next block. A second claim returns \`already_claimed\` and gives nothing. If you get a 401, your \`TET_CHAIN_ID\` doesn't match the network.
 
 ## Use the desktop
 
@@ -215,9 +207,9 @@ One file, \`fees.rs\`. There used to be seven different fee schedules in differe
 
 **Block 9828.** Two nodes disagreed on the state after block 9828. Three causes: wall-clock time read inside consensus, some routes writing to the ledger directly instead of through blocks, and a row being dropped without an error.
 
-**Transactions that never arrived.** Transactions sent to a follower node never reached the block producer. I first blamed gossipsub and said so on X. The real cause was mine: three libp2p swarms sharing one keypair, so they had the same PeerId and stepped on each other. Fixed, and I corrected the post. Separately, \`/ledger/transfer\` wasn't publishing to the transaction topic at all.
+**Transactions that never arrived.** Transactions sent to a follower node never reached the block producer. I blamed gossipsub at the time and said so on X. The real cause was mine: three libp2p swarms sharing one keypair, so they had the same PeerId and stepped on each other. Fixed, and I corrected the post. Separately, \`/ledger/transfer\` wasn't publishing to the transaction topic at all.
 
-**Routes anyone could call.** A clean-up found five kinds of unauthenticated routes, including one that could replace the whole ledger and seven DEX routes that could move other people's funds. All removed.
+**Routes anyone could call.** A clean-up found five kinds of unauthenticated routes, including one that could replace the whole ledger and seven DEX routes that could change other people's balances. All removed.
 `,
   files: [
     ["Whitepaper", "https://github.com/TET-Network-Foundation/TET-OS/blob/main/WHITEPAPER.md", "Genesis draft v1.0, April 2026."]
@@ -245,7 +237,7 @@ The whole world starts covered in fog. It clears only where you physically go, c
 ## Three maps
 
 - **Yours.** Only the places you walked.
-- **Everyone's.** The whole world, cleared by everybody together. The first person to open a place gets a First Footprint there.
+- **Everyone's.** The whole world, cleared by everybody together. Whoever opens a place before anyone else gets a Footprint there.
 - **A group's.** A map you share with friends. It's a group chat, except what builds up is places instead of messages. Good for a trip, a couple, a family, a club.
 
 ![Posting a photo where you are](images/unfog-post.jpg)
@@ -262,13 +254,13 @@ Fog of World proved people love clearing a map by walking. It has no friends in 
 
 ## What's live and what's next
 
-**Live at unfog.tech:** the fog on all three maps, GPS checks against spoofing, posting only where you are, photo pins, First Footprints, daily prompts, your profile map.
+**Live at unfog.tech:** the fog on all three maps, GPS checks against spoofing, posting only where you are, photo pins, Footprints, daily prompts, your profile map.
 
 **Built, coming next:** following, DMs, comments, notifications, the meeting-pin QR code, Japanese / English / Chinese / Cantonese.
 
 ## Things I won't do
 
-Sell location data. Put ads in the feed. Make money from people feeling bad about themselves.
+Sell location data. Put ads in the feed. Build it on people feeling bad about themselves.
 `,
   use: `
 1. Open [unfog.tech](https://unfog.tech) on your phone.
@@ -429,41 +421,41 @@ The same goes for styles, colours, languages and the text on the empty page.
 };
 
 // ---------------------------------------------------------------------------
-// LOG — oldest first. New posts go at the bottom.
+// LOG — oldest at the top. New posts go at the bottom.
 // ---------------------------------------------------------------------------
 window.POSTS = [
   { date: "2026-04-28", project: "tet", title: "Genesis draft v1.0",
-    body: "First full draft of the whitepaper.\n\nTET is a Layer 1 in Rust on libp2p. Transactions are signed with ML-DSA as well as Ed25519, so the chain still holds once quantum computers can break the classical signatures.\n\nTwo earlier tries are archived: one on Substrate (`tet-core-node`) and one on Solana (`nexus-onchain`). Both taught me what I didn't want. This one starts from nothing.\n\nThe product on top isn't a wallet. It's a desktop: send coins, message, share files, one key." },
+    body: "A full draft of the whitepaper.\n\nTET is a Layer 1 in Rust on libp2p. Transactions are signed with ML-DSA as well as Ed25519, so the chain still holds once quantum computers can break the classical signatures.\n\nTwo earlier tries are archived: one on Substrate (`tet-core-node`) and one on Solana (`nexus-onchain`). Both taught me what I didn't want. This one starts from nothing.\n\nThe product on top isn't a wallet. It's a desktop: transfers, messages, files.\n\n_Edited 2026-10-13: wording corrected to match the code._" },
 
-  { date: "2026-05-31", project: "tet", title: "Payments through consensus, Tmail working end to end",
-    body: "Send Coins now goes through consensus instead of writing to the ledger directly.\n\nSame afternoon, Tmail went from nothing to working between two wallets: register a key, write a message, encrypt it (X25519 + Kyber768, ChaCha20), sign it (Ed25519 + ML-DSA-44), gossip it, decrypt it on the other side. The other wallet showed 'Hello'.\n\nOne thing for the record. The Rust Kyber crate is CRYSTALS-Kyber round 3, not FIPS 203 ML-KEM, and the two aren't byte-compatible. The whitepaper now says round 3 until I migrate.\n\n![A message arriving in the second wallet](images/tet-tmail.jpg)" },
+  { date: "2026-05-31", project: "tet", title: "Transfers through consensus, Tmail working end to end",
+    body: "Transfers now go through consensus instead of writing to the ledger directly.\n\nSame afternoon, Tmail went from nothing to working between two wallets: register a key, write a message, encrypt it (X25519 + Kyber768, ChaCha20), sign it (Ed25519 + ML-DSA-44), gossip it, decrypt it on the other side. The other wallet showed 'Hello'.\n\nOne thing for the record. The Rust Kyber crate is CRYSTALS-Kyber round 3, not FIPS 203 ML-KEM, and the two aren't byte-compatible. The whitepaper now says round 3 until I migrate.\n\n![A message arriving in the second wallet](images/tet-tmail.jpg)\n\n_Edited 2026-10-13: wording corrected to match the code._" },
 
   { date: "2026-06-07", project: "tet", title: "Applied to the Paradigm Fellowship",
     body: "Applied to the Paradigm Fellowship 2026 with an introduction from Manu. Eight essays." },
 
-  { date: "2026-06-09", project: "tet", title: "Files over libp2p, fees on chain",
-    body: "The third piece of the desktop. Files now move over a custom libp2p codec instead of the REST fallback, and the fee settles on chain.\n\nTest: 5.2 MB from my Mac in Switzerland to the server in Helsinki in 7.2 seconds. SHA-256 identical on both ends. Exactly 1000 µTET taken, treasury +250, burn +250, same numbers on both nodes. 15 of 15 interop checks pass.\n\nCoins, messages and files now all work between countries.\n\nThe UI got rebuilt too, as a Windows 95 style shell. The main client file went from about 3,100 lines to 2,200.\n\n![The desktop](images/tet-desktop.jpg)" },
+  { date: "2026-06-09", project: "tet", title: "Files over libp2p, recorded on chain",
+    body: "The third piece of the desktop. Files now move over a custom libp2p codec instead of the REST fallback, and the transfer is recorded on chain.\n\nTest: 5.2 MB from my Mac in Switzerland to the server in Helsinki in 7.2 seconds. SHA-256 identical on both ends. Exactly 0.001 TET (practice unit, can't be exchanged for money) taken, a quarter to the treasury and a quarter burned, the same numbers on both nodes. 15 of 15 interop checks pass.\n\nTransfers, messages and files now all work between countries.\n\nThe UI got rebuilt too, as a Windows 95 style shell. The main client file went from about 3,100 lines to 2,200.\n\n![The desktop](images/tet-desktop.jpg)\n\n_Edited 2026-10-13: wording corrected to match the code._" },
 
   { date: "2026-06-29", project: "unfog", title: "A map where the fog clears where you walk",
     body: "New project, working name Msns.\n\nFog of World showed that clearing a map by walking is addictive. It was App of the Day in 137 countries. It has no people in it. I want the version with friends: your profile is the map of where you've been, and photos stay pinned where they were taken.\n\nThree fog layers: mine, everyone's, and a shared one for a group.\n\nNext.js, Supabase with PostGIS, MapLibre. Not Google Maps." },
 
-  { date: "2026-07-25", project: "unfog", title: "Live, and the first real post",
-    body: "The app runs against a real database now. I signed up like a stranger would and posted a photo. It's on the map.\n\nThe preview had thirty layers of patches on it, so I rebuilt it from zero with one design: paper white, ink black, one red for routes. Four languages, profile grid, follow and DM, comments, report and block.\n\n![First post on the map](images/unfog-first-post.jpg)" },
+  { date: "2026-07-25", project: "unfog", title: "Live, with a real post",
+    body: "The app runs against a real database now. I signed up like a stranger would and posted a photo. It's on the map.\n\nThe preview had thirty layers of patches on it, so I rebuilt it from zero with one design: paper white, ink black, one red for routes. Four languages, profile grid, follow and DM, comments, report and block.\n\n![A post on the map](images/unfog-first-post.jpg)\n\n_Edited 2026-10-13: wording corrected to match the code._" },
 
   { date: "2026-08-04", project: "unfog", title: "Meeting someone becomes a pin",
-    body: "I almost built a separate app for swapping contacts with a QR code. It goes inside Unfog instead.\n\nWhen two people scan each other, both get a private pin where they met. It works even if you have zero followers, which helps with the empty-app problem, and no plain QR app can remember the place.\n\nDatabase first, screens after the first users." },
+    body: "I almost built a separate app for swapping contacts with a QR code. It goes inside Unfog instead.\n\nWhen two people scan each other, both get a private pin where they met. It works even if you have zero followers, which helps with the empty-app problem, and no plain QR app can remember the place.\n\nDatabase before screens, and screens once real people use it.\n\n_Edited 2026-10-13: wording corrected to match the code._" },
 
   { date: "2026-08-15", project: "unfog", title: "Msns is now Unfog",
     body: "Real name, real domain: [unfog.tech](https://unfog.tech). Same app. The name says what it does." },
 
   { date: "2026-09-17", project: "tet", title: "Back after three months",
-    body: "IGCSE took the summer. The repo sat untouched from early July.\n\nFirst job back wasn't features. I read the whole codebase and wrote down what actually exists, then started fixing everything where the whitepaper said one thing and the code did another." },
+    body: "IGCSE took the summer. The repo sat untouched from early July.\n\nBack at it, the job wasn't features. I read the whole codebase and wrote down what actually exists, then started fixing everything where the whitepaper said one thing and the code did another.\n\n_Edited 2026-10-13: wording corrected to match the code._" },
 
   { date: "2026-09-21", project: "tet", title: "Clean-up: fees, cryptography, open routes",
-    body: "Seven fee schedules are now one file. A hidden fee to the founder address is gone, and so is a DEX bug that leaked funds.\n\nCrypto claims now match the code: Kyber round 3 called round 3, ML-DSA set to level 44 everywhere and checked against NIST's test vectors.\n\nRemoved five kinds of routes anyone could call without signing, including one that could replace the whole ledger and seven that could move other people's money.\n\n185 tests in CI. Six of them guard against old bugs coming back, and each one is proven to fail when the bug is put back. Docker image with the UI inside. 72 GB of old build files deleted.\n\nAlso found why two nodes split at block 9828: wall-clock time inside consensus, direct writes to the ledger, and a row dropped without an error." },
+    body: "Seven fee schedules are now one file. A hidden fee to the founder address is gone, and so is a DEX bug that leaked balances.\n\nCrypto claims now match the code: Kyber round 3 called round 3, ML-DSA set to level 44 everywhere and checked against NIST's test vectors.\n\nRemoved five kinds of routes anyone could call without signing, including one that could replace the whole ledger and seven that could change other people's balances.\n\n185 tests in CI. Six of them guard against old bugs coming back, and each one is proven to fail when the bug is put back. Docker image with the UI inside. 72 GB of old build files deleted.\n\nAlso found why two nodes split at block 9828: wall-clock time inside consensus, direct writes to the ledger, and a row dropped without an error.\n\n_Edited 2026-10-13: wording corrected to match the code._" },
 
   { date: "2026-09-22", project: "tet", title: "Helsinki seed live, second node in sync",
-    body: "Seed node is back at `95.217.158.153:8002`. A fresh node in Switzerland syncs from it and matches the state root at every height.\n\nTransactions sent to a follower now reach the block producer. Before this, `/ledger/transfer` never published to the network and nobody had noticed.\n\nI first blamed gossipsub for the missing transactions and said so on X. It was my bug: three swarms sharing one key, so one PeerId. Fixed it and posted a correction.\n\nlibp2p 0.48 → 0.50, which closes three CVEs. Opened a small PR on rust-libp2p (#6635) that logs when a secondary connection gets no subscriptions, so the next person finds this faster.\n\n![Two nodes, same state root](images/tet-nodes.jpg)" },
+    body: "Seed node is back at `95.217.158.153:8002`. A fresh node in Switzerland syncs from it and matches the state root at every height.\n\nTransactions sent to a follower now reach the block producer. Before this, `/ledger/transfer` never published to the network and nobody had noticed.\n\nI blamed gossipsub at the time for the missing transactions and said so on X. It was my bug: three swarms sharing one key, so one PeerId. Fixed it and posted a correction.\n\nlibp2p 0.48 → 0.50, which closes three CVEs. Opened a small PR on rust-libp2p (#6635) that logs when a secondary connection gets no subscriptions, so the next person finds this faster.\n\n![Two nodes, same state root](images/tet-nodes.jpg)\n\n_Edited 2026-10-13: wording corrected to match the code._" },
 
   { date: "2026-09-23", project: "kpee", title: "Kpee",
     body: "I wrote the idea on paper this morning and it works tonight.\n\nPaste notes, pick study sheet, blanks, fold & test, flashcards or original, print. One HTML file. Offline. No AI. A USER ZONE at the bottom lets anyone add their own modes, colours or languages.\n\nIt does its own page layout so page numbers come out the same in every browser, A4 or Letter. Flashcards print mirrored on the back so they line up when you cut them.\n\n[Download it](files/kpee.html).\n\n![Printed blanks](images/kpee-print.jpg)" },
@@ -472,17 +464,17 @@ window.POSTS = [
     body: "Working on burn-after-read, time-lock and pinned messages for Tmail, a watchdog that restarts the seed if the height stops moving, and an outside check every fifteen minutes.\n\nAfter that, a note to Manu with how to join: `docker compose up`, the seed address, and what I found in libp2p." },
 
   { date: "2026-09-24", project: "kpee", title: "Formulas, charts, maps and Word files",
-    body: "Kpee typesets maths and chemistry now. Inline is `$x^2$`, a display equation is `$$` on a line of its own, and chemistry is `\\ce{H2O}`.\n\nCharts are a block: open with `::: bar Title`, paste data rows like `A, 12` straight out of Excel, close with `:::`. Bar, horizontal bar, line, pie, donut and scatter, plus a world map — the map takes `region: world` on the first line.\n\nWord files work too. Drop a .docx on the page and it opens, no converting first. There is an Open file button as well, for when dragging is awkward.\n\nThree bugs went with it. The preview threw a ResizeObserver error. A numbered list written directly after a bullet list got swallowed into the bullets. The paper drifted out of position when you zoomed in.\n\nThe file went from 165 KB to about 930 KB, nearly all of it KaTeX and its fonts. It still runs offline and there is no AI in it." },
-  { date: "2026-09-26", project: "tet", title: "Anonymous messages between two countries",
-    body: "Tmail can send a message without showing who sent it. The sender proves they are one of the registered users without saying which one. A zero-knowledge proof does that, and it uses only hashes, so nothing inside it is the kind of maths a quantum computer breaks.\n\nMy first design was wrong. It proved \"I know a seed that derives this key\", took 11 to 19 minutes per proof, and proved nothing useful, because anyone can invent a seed. I deleted it. The replacement proves membership in a Merkle tree with SHA-256 only, which the zkVM has hardware support for, and takes about 60 seconds.\n\nThe proof receipt is 257 KB and the gossip limit is 128 KB. So the message carries a 7 KB announcement and the receiver pulls the receipt separately.\n\nThen the test between countries failed. Helsinki had two registrations, my node in Switzerland had one, so the two computed different roots and a perfectly valid message was rejected. It was not a bug in the proof. Gossip only delivers to whoever is listening at that moment and nothing fills in the past, so any node that was offline for any registration stays wrong forever. I wrote that down as a red result. Registering the same wallet on both machines would have turned the test green and left the network broken.\n\nThe fix is a pull, not a push. Two nodes compare registry roots when they connect and every five minutes after that, and only transfer anything when the roots differ. Every registration that arrives this way goes through the same signature check as a fresh one, so a peer cannot invent one. It can refuse to send me registrations, and then I stay partial and reject proofs I cannot check, which is the safe direction.\n\nRerun with a fresh node that was never present for the registration: it pulled the registration 1.2 seconds after starting, took it into its tree at the next epoch 55.7 seconds later, and then matched Helsinki\u2019s root exactly. It can now serve a proof path for a wallet it never saw register.\n\nVerifying one registration takes 2.39 ms, so a full 50,000-member registry is about two minutes of signature checking. That is too long to hand to one peer, so a sync round stops after 30 seconds, says in the log that it stopped, and carries on from the same place next time.\n\nBurn-after-read and time-lock work too. Pinned messages, and the 1 TET deposit that would make anonymous sending cost something, are not built. Both sit in the test list as red so nobody can mistake them for done.\n\n253 tests. Three of the new ones I checked by putting the bug back and confirming they fail \u2014 including one where the first check I wrote would have passed for the wrong reason." },
+    body: "Kpee typesets maths and chemistry now. Inline is `$x^2$`, a display equation is `$$` on a line of its own, and chemistry is `\\ce{H2O}`.\n\nCharts are a block: open with `::: bar Title`, paste data rows like `A, 12` straight out of Excel, close with `:::`. Bar, horizontal bar, line, pie, donut and scatter, plus a world map — the map takes `region: world` on its opening line.\n\nWord files work too. Drop a .docx on the page and it opens, no converting needed. There is an Open file button as well, for when dragging is awkward.\n\nThree bugs went with it. The preview threw a ResizeObserver error. A numbered list written directly after a bullet list got swallowed into the bullets. The paper drifted out of position when you zoomed in.\n\nThe file went from 165 KB to about 930 KB, nearly all of it KaTeX and its fonts. It still runs offline and there is no AI in it.\n\n_Edited 2026-10-13: wording corrected to match the code._" },
+  { date: "2026-09-26", project: "tet", title: "Messages that don't show the sender, between two countries",
+    body: "Tmail can send a message without showing who sent it. The sender proves they are one of the registered users without saying which one. A zero-knowledge proof does that, and it uses only hashes, so nothing inside it is the kind of maths a quantum computer breaks.\n\nMy initial design was wrong. It proved \"I know a seed that derives this key\", took 11 to 19 minutes per proof, and proved nothing useful, because anyone can invent a seed. I deleted it. The replacement proves membership in a Merkle tree with SHA-256 only, which the zkVM has hardware support for, and takes about 60 seconds.\n\nThe proof receipt is 257 KB and the gossip limit is 128 KB. So the message carries a 7 KB announcement and the receiver pulls the receipt separately.\n\nThen the test between countries failed. Helsinki had two registrations, my node in Switzerland had one, so the two computed different roots and a perfectly valid message was rejected. It was not a bug in the proof. Gossip only delivers to whoever is listening at that moment and nothing fills in the past, so any node that was offline for any registration stays wrong forever. I wrote that down as a red result. Registering the same wallet on both machines would have turned the test green and left the network broken.\n\nThe fix is a pull, not a push. Two nodes compare registry roots when they connect and every five minutes after that, and only transfer anything when the roots differ. Every registration that arrives this way goes through the same signature check as a fresh one, so a peer cannot invent one. It can refuse to send me registrations, and then I stay partial and reject proofs I cannot check, which is the safe direction.\n\nRerun with a fresh node that was never present for the registration: it pulled the registration 1.2 seconds after starting, took it into its tree at the next epoch 55.7 seconds later, and then matched Helsinki\u2019s root exactly. It can now serve a proof path for a wallet it never saw register.\n\nVerifying one registration takes 2.39 ms, so a full 50,000-member registry is about two minutes of signature checking. That is too long to hand to one peer, so a sync round stops after 30 seconds, says in the log that it stopped, and carries on from the same place next time.\n\nBurn-after-read and time-lock work too. Pinned messages, and the deposit that would limit how much one person can send this way, are not built. Both sit in the test list as red so nobody can mistake them for done.\n\n253 tests. Three of the new ones I checked by putting the bug back and confirming they fail \u2014 including one where the check I wrote at the start would have passed for the wrong reason.\n\n_Edited 2026-10-13: wording corrected to match the code._" },
   { date: "2026-10-01", project: "tet", title: "The code is public now",
-    body: "TET-OS is open. https://github.com/TET-Network-Foundation/TET-OS\n\nWhat works, between two countries: coins, encrypted mail, file sharing, scheduled release, burn-after-read, and anonymous sending with a zero-knowledge proof that uses only hashes.\n\nWhat doesn't: pinned messages, and the deposit that would make anonymous sending cost something. Both need a change I can only make when I cut a new genesis, which I'm targeting for the first quarter of next year. Their tests are marked #[ignore] on purpose and stay red until the Phase 1 genesis (AT-5(b), AT-7(b)) so nobody can mistake them for done.\n\nIt is not audited. There are two seed nodes now, in Helsinki and Nuremberg, and both were at block 66,653 when I wrote this. Only Helsinki makes blocks, though, so one machine can still stop the network. The anonymity set is everyone my node has seen register, which today is a handful of people. All of that is written down in SECURITY.md rather than left for someone to discover.\n\nThe last two weeks were mostly finding out what I had not tested. I wrote a table of every behaviour against every condition that had caused a bug that month, then read the tests instead of trusting their names. It said nothing restarted a node. So I wrote that test, and it found that a transaction someone sent could disappear if the node restarted before it was mined — accepted, receipt given, gone. That is fixed.\n\nIt also said twelve of my regression tests had never been checked by putting the bug back. I checked all twelve. They all catch what they claim. One was weaker than it looked: it only failed when I removed both halves of a check, so removing one half would have passed review and passed CI. That one is stronger now.\n\nThe worst thing I found was in a file I had planned to leave alone. A crypto bundle that ships to browsers could not be rebuilt from its own source, so I went to fix that. The rebuild signed with the wrong post-quantum parameter set, and the node would have rejected every signature from every browser wallet. It had never broken anything only because the committed file was old enough to predate the mistake. The safe-looking thing — leaving it alone — was what kept the bug alive.\n\n253 tests when I started, 282 now, and a workflow that runs the zero-knowledge ones against a real prover instead of a mock. It passes.\n\nDrafted with Claude Code from the day's commits and logs, edited by me." },
-  { date: "2026-10-04", project: "tet", title: "Fixed: desktop anonymous mode was not anonymous",
-    body: "Fixed: the desktop's anonymous mode sent messages signed with the sender's own wallet and told the node the sender's wallet id. Found during a design review, fixed in #17/#18. If you used anonymous mode from the desktop before 2026-10-04, or from a node you haven't updated since, those messages were not anonymous." },
+    body: "TET-OS is open. https://github.com/TET-Network-Foundation/TET-OS\n\nWhat works, between two countries: transfers, encrypted mail, file sharing, scheduled release, burn-after-read, and sending without showing which member sent it, with a zero-knowledge proof that uses only hashes.\n\nWhat doesn't: pinned messages, and the deposit that would limit how much one person can send that way. Both need a change I can only make when I cut a new genesis, which I'm targeting for January to March next year. Their tests are marked #[ignore] on purpose and stay red until the Phase 1 genesis (AT-5(b), AT-7(b)) so nobody can mistake them for done.\n\nIt is not audited. There are two seed nodes now, in Helsinki and Nuremberg, and both were at block 66,653 when I wrote this. Only Helsinki makes blocks, though, so one machine can still stop the network. The group a sender hides in is everyone my node has seen register, which today is a handful of people. All of that is written down in SECURITY.md rather than left for someone to discover.\n\nThe last two weeks were mostly finding out what I had not tested. I wrote a table of every behaviour against every condition that had caused a bug that month, then read the tests instead of trusting their names. It said nothing restarted a node. So I wrote that test, and it found that a transaction someone sent could disappear if the node restarted before it was mined — accepted, receipt given, gone. That is fixed.\n\nIt also said twelve of my regression tests had never been checked by putting the bug back. I checked all twelve. They all catch what they claim. One was weaker than it looked: it only failed when I removed both halves of a check, so removing one half would have passed review and passed CI. That one is stronger now.\n\nThe worst thing I found was in a file I had planned to leave alone. A crypto bundle that ships to browsers could not be rebuilt from its own source, so I went to fix that. The rebuild signed with the wrong post-quantum parameter set, and the node would have rejected every signature from every browser wallet. It had never broken anything only because the committed file was old enough to predate the mistake. The safe-looking thing — leaving it alone — was what kept the bug alive.\n\n253 tests when I started, 282 now, and a workflow that runs the zero-knowledge ones against a real prover instead of a mock. It passes.\n\nDrafted with Claude Code from the day's commits and logs, edited by me.\n\n_Edited 2026-10-13: wording corrected to match the code._" },
+  { date: "2026-10-04", project: "tet", title: "Fixed: the desktop's no-name mode showed the sender",
+    body: "Fixed: the desktop's mode for sending without your name sent messages signed with the sender's own wallet and told the node the sender's wallet id. Found during a design review, fixed in #17/#18. If you used that mode from the desktop before 2026-10-04, or from a node you haven't updated since, those messages showed who sent them.\n\n_Edited 2026-10-13: wording corrected to match the code._" },
   { date: "2026-10-04", project: "tet", title: "The testnet stopped for 33 hours",
-    body: "From 06:25 UTC on 3 October to 15:18 UTC on 4 October the testnet made no blocks. The node that produces them got stuck at height 78,479: its networking loop stopped and took its API down with it. The monitor went red within a minute and emailed me. I didn't read it for 33 hours. Nothing restarted the node either: its watchdog was written for systemd, and the seeds run in Docker, where nothing was listening. I found it by accident during a deploy.\n\nWhat changed: the node now exits after three minutes stuck, so Docker restarts it. The health probe restarts the producer when it can't reach it, and saves the logs first. Alerts go to Discord now, not only email. Deploys now reinstall the probe as well: both seeds were running copies weeks old, and the follower's old copy restarted it 33 times during the outage, which helped nothing.\n\nThen I tested the alerting by stopping the follower for six minutes. The alert fired, and the follower stayed down as it should. But the chain stopped too, for 13 minutes: the producer stops mining when it has no peers. That is a second bug, now tracked.\n\nWhat isn't fixed is why the loop got stuck. It's the same family of bug as in May and June. The logs point at a lock shared with block production; finding it is next. Postmortem: https://github.com/TET-Network-Foundation/TET-OS/blob/main/docs/postmortems/2026-10-04-producer-wedge-33h.md\n\nDrafted with Claude Code from the day's logs." },
+    body: "From 06:25 UTC on 3 October to 15:18 UTC on 4 October the testnet made no blocks. The node that produces them got stuck at height 78,479: its networking loop stopped and took its API down with it. The monitor went red within a minute and emailed me. I didn't read it for 33 hours. Nothing restarted the node either: its watchdog was written for systemd, and the seeds run in Docker, where nothing was listening. I found it by accident during a deploy.\n\nWhat changed: the node now exits after three minutes stuck, so Docker restarts it. The health probe restarts the producer when it can't reach it, and saves the logs before it does. Alerts go to Discord now, not only email. Deploys now reinstall the probe as well: both seeds were running copies weeks old, and the follower's old copy restarted it 33 times during the outage, which helped nothing.\n\nThen I tested the alerting by stopping the follower for six minutes. The alert fired, and the follower stayed down as it should. But the chain stopped too, for 13 minutes: the producer stops mining when it has no peers. That is a second bug, now tracked.\n\nWhat isn't fixed is why the loop got stuck. It's the same family of bug as in May and June. The logs point at a lock shared with block production; finding it is next. Postmortem: https://github.com/TET-Network-Foundation/TET-OS/blob/main/docs/postmortems/2026-10-04-producer-wedge-33h.md\n\nDrafted with Claude Code from the day's logs.\n\n_Edited 2026-10-13: wording corrected to match the code._" },
   { date: "2026-10-10", project: "tet", title: "Fixed: one bad transaction could empty the queue",
-    body: "One invalid transaction could make the testnet drop every pending transaction. The node that makes blocks took everything waiting, and if one of those transactions was something a block refuses (anyone could send one, from a free wallet), the whole block failed and every other transaction went with it. Sent once per block, that would have kept all transactions off the network.\n\nFound while testing something else today. Fixed, deployed to both seeds and the demo node, and checked: all three at the same height with the same state root. Now a transaction no block can accept is refused when it arrives, so is a transfer its sender can't cover, counting their other pending ones, and a block is built without any transaction that would break it, so only that one is dropped. No balance could change without its wallet's signature.\n\nThe automatic review of the fix found three more ways the first version could still be abused (spam filling the slow path, a retry that could apply a transaction twice, a race between two submissions). Each is fixed with a test that fails without the fix.\n\nOne mistake of mine on the way: a working log that named the issue was committed to a public branch a few hours before the fix went out. It's out of the branch now, and working logs can no longer be committed.\n\nDrafted with Claude Code from the day's logs." },
+    body: "One invalid transaction could make the testnet drop every pending transaction. The node that makes blocks took everything waiting, and if one of those transactions was something a block refuses (anyone could send one, from a free wallet), the whole block failed and every other transaction went with it. Sent once per block, that would have kept all transactions off the network.\n\nFound while testing something else today. Fixed, deployed to both seeds and the demo node, and checked: all three at the same height with the same state root. Now a transaction no block can accept is refused when it arrives, so is a transfer its sender can't cover, counting their other pending ones, and a block is built without any transaction that would break it, so only that one is dropped. No balance could change without its wallet's signature.\n\nThe automatic review of the fix found three more ways the initial version could still be abused (spam filling the slow path, a retry that could apply a transaction twice, a race between two submissions). Each is fixed with a test that fails without the fix.\n\nOne mistake of mine on the way: a working log that named the issue was committed to a public branch a few hours before the fix went out. It's out of the branch now, and working logs can no longer be committed.\n\nDrafted with Claude Code from the day's logs.\n\n_Edited 2026-10-13: wording corrected to match the code._" },
   { date: "2026-10-11", project: "tet", title: "Fixed: a message could be dated anywhere",
-    body: "The time on a message was whatever the sender said it was. Nothing checked it against the node's clock, so a post could be dated anywhere: backdated to the top of someone else's thread, dated in the future to stay past the retention limit, or, for an anonymous post, dated on another day.\n\nFound while building the thread grants, which decide a thread's starter by time. Fixed and deployed to both seeds and the demo node: a node now refuses a message dated more than 5 minutes from its own clock, and tells the sender \"your device clock is off\". An anonymous post must be dated on the node's current UTC day, so one sent a second before midnight that arrives after it is refused cleanly and can be sent again. The nodes' health check now fails if their own clocks aren't synced. No message could be read or forged this way.\n\nThe thread grants stay in dry-run until vouching exists: with free wallets, \"three different people\" can be one person.\n\nDrafted with Claude Code from the day's logs." }
+    body: "The time on a message was whatever the sender said it was. Nothing checked it against the node's clock, so a post could be dated anywhere: backdated to the top of someone else's thread, dated in the future to stay past the retention limit, or, for a post that hides its sender, dated on another day.\n\nFound while building the thread grants, which decide a thread's starter by time. Fixed and deployed to both seeds and the demo node: a node now refuses a message dated more than 5 minutes from its own clock, and tells the sender \"your device clock is off\". A post that hides its sender must be dated on the node's current UTC day, so one sent a second before midnight that arrives after it is refused cleanly and can be sent again. The nodes' health check now fails if their own clocks aren't synced. No message could be read or forged this way.\n\nThe thread grants stay in dry-run until vouching exists: with free wallets, \"three different people\" can be one person.\n\nDrafted with Claude Code from the day's logs.\n\n_Edited 2026-10-13: wording corrected to match the code._" }
 ];
