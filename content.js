@@ -178,7 +178,7 @@ The UI comes with the Docker image. Open it in your browser, create or import a 
 
 - **Send** to another address.
 - **Messages** to another key. Only the recipient can read them.
-- **Files** to another node. You'll see the fee leave your balance.
+- **Files** to another node. You'll see the fee, in the practice unit, leave your balance.
 
 ## If something breaks
 
@@ -195,7 +195,7 @@ libp2p with gossipsub for blocks, transactions and Tmail (\`/tet/v1/tmail\`), an
 
 ## Fees
 
-One file, \`fees.rs\`. There used to be seven different fee schedules in different places. File-transfer fees split 25 / 50 / 25 between treasury, the serving node and burn.
+Fees are charged in TET, the testnet's practice unit: it has no monetary value and can't be exchanged for money. They're all in one file, \`fees.rs\` (there used to be seven fee schedules in different places). A file transfer's fee is split: a quarter to the testnet treasury, half to the node that serves the file, and a quarter burned. No share goes to the founder wallet.
 
 ## Rules I keep in the repo
 
@@ -237,7 +237,7 @@ The whole world starts covered in fog. It clears only where you physically go, c
 ## Three maps
 
 - **Yours.** Only the places you walked.
-- **Everyone's.** The whole world, cleared by everybody together. Whoever opens a place before anyone else gets a Footprint there.
+- **Everyone's.** The whole world, cleared by everybody together. Whoever opens a place before anyone else gets a First Footprint there.
 - **A group's.** A map you share with friends. It's a group chat, except what builds up is places instead of messages. Good for a trip, a couple, a family, a club.
 
 ![Posting a photo where you are](images/unfog-post.jpg)
@@ -254,7 +254,7 @@ Fog of World proved people love clearing a map by walking. It has no friends in 
 
 ## What's live and what's next
 
-**Live at unfog.tech:** the fog on all three maps, GPS checks against spoofing, posting only where you are, photo pins, Footprints, daily prompts, your profile map.
+**Live at unfog.tech:** the fog on all three maps, GPS checks against spoofing, posting only where you are, photo pins, First Footprints, daily prompts, your profile map.
 
 **Built, coming next:** following, DMs, comments, notifications, the meeting-pin QR code, Japanese / English / Chinese / Cantonese.
 
@@ -452,7 +452,7 @@ window.POSTS = [
     body: "IGCSE took the summer. The repo sat untouched from early July.\n\nBack at it, the job wasn't features. I read the whole codebase and wrote down what actually exists, then started fixing everything where the whitepaper said one thing and the code did another.\n\n_Edited 2026-10-13: wording corrected to match the code._" },
 
   { date: "2026-09-21", project: "tet", title: "Clean-up: fees, cryptography, open routes",
-    body: "Seven fee schedules are now one file. A hidden fee to the founder address is gone, and so is a DEX bug that leaked balances.\n\nCrypto claims now match the code: Kyber round 3 called round 3, ML-DSA set to level 44 everywhere and checked against NIST's test vectors.\n\nRemoved five kinds of routes anyone could call without signing, including one that could replace the whole ledger and seven that could change other people's balances.\n\n185 tests in CI. Six of them guard against old bugs coming back, and each one is proven to fail when the bug is put back. Docker image with the UI inside. 72 GB of old build files deleted.\n\nAlso found why two nodes split at block 9828: wall-clock time inside consensus, direct writes to the ledger, and a row dropped without an error.\n\n_Edited 2026-10-13: wording corrected to match the code._" },
+    body: "Seven fee schedules are now one file, and a DEX bug that leaked balances is gone.\n\nCrypto claims now match the code: Kyber round 3 called round 3, ML-DSA set to level 44 everywhere and checked against NIST's test vectors.\n\nRemoved five kinds of routes anyone could call without signing, including one that could replace the whole ledger and seven that could change other people's balances.\n\n185 tests in CI. Six of them guard against old bugs coming back, and each one is proven to fail when the bug is put back. Docker image with the UI inside. 72 GB of old build files deleted.\n\nAlso found why two nodes split at block 9828: wall-clock time inside consensus, direct writes to the ledger, and a row dropped without an error.\n\n_Edited 2026-10-13: wording corrected to match the code._" },
 
   { date: "2026-09-22", project: "tet", title: "Helsinki seed live, second node in sync",
     body: "Seed node is back at `95.217.158.153:8002`. A fresh node in Switzerland syncs from it and matches the state root at every height.\n\nTransactions sent to a follower now reach the block producer. Before this, `/ledger/transfer` never published to the network and nobody had noticed.\n\nI blamed gossipsub at the time for the missing transactions and said so on X. It was my bug: three swarms sharing one key, so one PeerId. Fixed it and posted a correction.\n\nlibp2p 0.48 → 0.50, which closes three CVEs. Opened a small PR on rust-libp2p (#6635) that logs when a secondary connection gets no subscriptions, so the next person finds this faster.\n\n![Two nodes, same state root](images/tet-nodes.jpg)\n\n_Edited 2026-10-13: wording corrected to match the code._" },
