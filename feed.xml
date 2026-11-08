@@ -6,6 +6,13 @@
   <description>What I&apos;m building, written down as I go.</description>
   <language>en</language>
   <item>
+    <title>TET: The start page stops saying &quot;prove&quot;, and a machine keeps its own log</title>
+    <link>https://stevenexus.org/#/p/tet/log</link>
+    <guid isPermaLink="false">tet-2026-11-07-20</guid>
+    <pubDate>Sat, 07 Nov 2026 12:00:00 GMT</pubDate>
+    <description>&lt;p&gt;Two changes this week, both open for review and not merged yet.&lt;/p&gt;&lt;p&gt;The /try start page said &amp;quot;Prove &amp;apos;I put this out, on this day&amp;apos; in 10 seconds.&amp;quot; Three things in that were wrong: a mark doesn&amp;apos;t prove anything, it carries no date (blocks have no time yet), and it says nothing about who you are. It now reads &amp;quot;Mark a file as yours. Check later that it existed before block N.&amp;quot;, with the limit right under it: &amp;quot;It shows which key signed, and before which block. It does not show who you are, or a date.&amp;quot; Same in Japanese and Hong Kong Chinese. The Japanese headline broke mid-word in my initial translation, so it was rephrased. The technical paper still has the old wording; it gets a v1.1 with an errata line, not a quiet edit.&lt;/p&gt;&lt;p&gt;The other is a small prototype, a machine notebook. A device signs each sensor reading with its own new key and chains it to the reading before, so the log can be checked later. On my Mac it logs the load average; on Linux it can also read the CPU temperature. It uses the signing tool TET already has, nothing new. Checking a log tells you which key signed each record and in what order they came. It does not tell you the reading is true, the clock was right, where the device was, who runs it, or that the key wasn&amp;apos;t copied. Not for military or dual-use systems.&lt;/p&gt;&lt;p&gt;Its test nearly measured the wrong thing. Flipping a byte, swapping two records or deleting one also breaks a signature or the numbering, so those cases still pass with the check that links each record to the one before it switched off. A fifth case re-signs a record with the device&amp;apos;s own key and a wrong link. Only that check can catch it, and with the check switched off the test fails, as it should.&lt;/p&gt;&lt;p&gt;The testnet hosts are still down after the hosting lock, so nothing was deployed, and publishing a notebook record was tested only against a stub on my Mac.&lt;/p&gt;&lt;p&gt;Drafted with Claude Code from the day&amp;apos;s logs.&lt;/p&gt;</description>
+  </item>
+  <item>
     <title>TET: Fixed: a message could be dated anywhere</title>
     <link>https://stevenexus.org/#/p/tet/log</link>
     <guid isPermaLink="false">tet-2026-10-11-19</guid>
