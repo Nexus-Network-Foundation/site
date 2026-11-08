@@ -47,7 +47,7 @@ window.SHIPPED = [
 
 // ---------------------------------------------------------------------------
 window.ABOUT = `
-I'm Steve. I'm 15 and in school in Switzerland. I grew up moving between Japan, Switzerland, Singapore and Hong Kong, so I think in Japanese and English and I'm used to things changing every couple of years.
+I'm Steve. I'm a student in Switzerland. I grew up moving between Japan, Switzerland, Singapore and Hong Kong, so I think in Japanese and English and I'm used to things changing every couple of years.
 
 I build software after class and on weekends. Mostly Rust for TET, TypeScript for everything else.
 
