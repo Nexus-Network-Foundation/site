@@ -6,6 +6,13 @@
   <description>What I&apos;m building, written down as I go.</description>
   <language>en</language>
   <item>
+    <title>TET: The site splits in two, and a revert</title>
+    <link>https://stevenexus.org/#/p/tet/log</link>
+    <guid isPermaLink="false">tet-2026-11-15-22</guid>
+    <pubDate>Sun, 15 Nov 2026 12:00:00 GMT</pubDate>
+    <description>&lt;p&gt;The TET web pages are now two halves in one codebase. The project site explains TET and is meant for tetnet.org: the home page, five sections, an About page and a changelog. The app, the pages you try things in, is meant for its own address. One build setting decides which half a build serves. Neither is hosted anywhere yet.&lt;/p&gt;&lt;p&gt;I also took the drawings off the home page. In their place: a real run of tet-cli checking a signed record and refusing a copy with one reading changed, a real screenshot, and four numbers that each say where they come from (424 Rust tests in CI, a 239 KiB proof that took 15.8 s to make, a 210-byte record). The section pages lose their decorative drawings too; only drawings that show steps stay. That change is open for review.&lt;/p&gt;&lt;p&gt;The check that every number has a source was wrong at first. It flagged every digit, including &amp;quot;step 3&amp;quot; and the 1 in the Japanese for &amp;quot;only once&amp;quot;. It now looks only at numbers with a unit and numbers of three or more digits.&lt;/p&gt;&lt;p&gt;I reverted #135, the code that derives agent keys from the owner&amp;apos;s words. It was merged by mistake and waits for an outside review. Nothing on main used it.&lt;/p&gt;&lt;p&gt;The nightly checks found three warnings in the WASM signer&amp;apos;s build stubs. The fix is open (#225). A dependency update is open too (#226).&lt;/p&gt;&lt;p&gt;A queue of older pull requests stopped at the first one, #168, because main deleted a file it edits.&lt;/p&gt;</description>
+  </item>
+  <item>
     <title>TET: Pushed after the outage, and a green run that only counted on my disk</title>
     <link>https://stevenexus.org/#/p/tet/log</link>
     <guid isPermaLink="false">tet-2026-11-12-21</guid>
